@@ -12,7 +12,8 @@ var (
 // parseCommandLine parses the command line arguments
 func parseCommandLine() {
 	// configure command line arguments
-	flag.BoolVar(&serverMode, "server", serverMode, "run as server")
+	flag.BoolVar(&serverMode, "server", serverMode,
+		"run as server (default: run as client)")
 
 	// parse command line arguments
 	flag.Parse()
