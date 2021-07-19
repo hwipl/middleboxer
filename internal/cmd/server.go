@@ -16,6 +16,10 @@ func (s *server) handleClient(client net.Conn) {
 
 // run runs this server
 func (s *server) run() {
+	defer func() {
+		_ = s.listener.Close()
+	}()
+
 	for {
 		client, err := s.listener.Accept()
 		if err != nil {
