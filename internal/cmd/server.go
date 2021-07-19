@@ -14,7 +14,7 @@ type server struct {
 func (s *server) handleClient(client net.Conn) {
 }
 
-// run this server
+// run runs this server
 func (s *server) run() {
 	for {
 		client, err := s.listener.Accept()
