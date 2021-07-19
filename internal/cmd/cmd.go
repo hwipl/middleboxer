@@ -30,5 +30,5 @@ func Run() {
 	}
 
 	// run as client
-	newClient().run()
+	newClient("").run()
 }
