@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	// run as server?
+	// serverMode determines if we run as a server or a client
 	serverMode = false
 )
 
@@ -23,8 +23,12 @@ func parseCommandLine() {
 func Run() {
 	parseCommandLine()
 
+	// run as server?
 	if serverMode {
 		newServer().run()
 		return
 	}
+
+	// run as client
+	newClient().run()
 }
