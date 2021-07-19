@@ -29,10 +29,10 @@ func (s *server) run() {
 	}
 }
 
-// newServer creates an new server
-func newServer() *server {
+// newServer creates an new server that listens on address
+func newServer(address string) *server {
 	// create listener
-	listener, err := net.Listen("tcp", "")
+	listener, err := net.Listen("tcp", address)
 	if err != nil {
 		log.Fatal(err)
 	}

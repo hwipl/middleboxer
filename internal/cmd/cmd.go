@@ -25,7 +25,7 @@ func Run() {
 
 	// run as server?
 	if serverMode {
-		newServer().run()
+		newServer("").run()
 		return
 	}
 
