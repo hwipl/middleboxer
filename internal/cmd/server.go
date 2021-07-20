@@ -20,6 +20,7 @@ func (s *server) run() {
 		_ = s.listener.Close()
 	}()
 
+	log.Println("Server listening on:", s.listener.Addr())
 	for {
 		client, err := s.listener.Accept()
 		if err != nil {
