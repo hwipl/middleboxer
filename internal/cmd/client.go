@@ -15,6 +15,8 @@ func (c *client) run() {
 	defer func() {
 		_ = c.conn.Close()
 	}()
+
+	log.Println("Client connected to:", c.conn.RemoteAddr())
 }
 
 // newClient connects to serverAddress and creates a new client
