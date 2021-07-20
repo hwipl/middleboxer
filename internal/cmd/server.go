@@ -12,6 +12,11 @@ type server struct {
 
 // handleClient handles a client connection
 func (s *server) handleClient(client net.Conn) {
+	defer func() {
+		_ = client.Close()
+	}()
+
+	log.Println("Client connected:", client.RemoteAddr())
 }
 
 // run runs this server
