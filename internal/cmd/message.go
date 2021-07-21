@@ -23,6 +23,18 @@ type Message struct {
 	Data   []byte
 }
 
+// serialize encodes a message as bytes
+func (m *Message) serialize() []byte {
+	var buf bytes.Buffer
+
+	err := binary.Write(&buf, binary.BigEndian, m)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return buf.Bytes()
+}
+
 // readBytes reads length bytes from conn
 func readBytes(conn net.Conn, length uint16) []byte {
 	buf := make([]byte, length)
@@ -37,6 +49,19 @@ func readBytes(conn net.Conn, length uint16) []byte {
 		count += n
 	}
 	return buf
+}
+
+// writeBytes writes buf to conn
+func writeBytes(conn net.Conn, buf []byte) bool {
+	count := 0
+	for count < len(buf) {
+		n, err := conn.Write(buf[count:])
+		if err != nil {
+			return false
+		}
+		count += n
+	}
+	return true
 }
 
 // readMessage reads the next Message from conn
@@ -64,6 +89,12 @@ func readMessage(conn net.Conn) *Message {
 
 	// return message
 	return newMessage(typ, data)
+}
+
+// writeMessage writes message to conn
+func writeMessage(conn net.Conn, message *Message) bool {
+	buf := message.serialize()
+	return writeBytes(conn, buf)
 }
 
 // newMessage creates a new Message with type and data
