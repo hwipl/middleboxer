@@ -3,6 +3,7 @@ package cmd
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/json"
 	"log"
 	"net"
 )
@@ -132,7 +133,16 @@ func readMessage(conn net.Conn) *TLVMessage {
 }
 
 // writeMessage writes message to conn
-func writeMessage(conn net.Conn, message *TLVMessage) bool {
-	buf := message.serialize()
+func writeMessage(conn net.Conn, message Message) bool {
+	b, err := json.Marshal(message)
+	if err != nil {
+		log.Fatal(err)
+	}
+	tlv := TLVMessage{
+		message.GetType(),
+		uint16(len(b)) + MessageHeaderLength,
+		b,
+	}
+	buf := tlv.serialize()
 	return writeBytes(conn, buf)
 }
