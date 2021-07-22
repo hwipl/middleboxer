@@ -97,7 +97,7 @@ func writeBytes(conn net.Conn, buf []byte) bool {
 }
 
 // readMessage reads the next Message from conn
-func readMessage(conn net.Conn) *TLVMessage {
+func readMessage(conn net.Conn) Message {
 	// read header from connection
 	headerBytes := readBytes(conn, MessageHeaderLength)
 	if headerBytes == nil {
@@ -124,12 +124,30 @@ func readMessage(conn net.Conn) *TLVMessage {
 		return nil
 	}
 
-	// return message
-	return &TLVMessage{
-		typ,
-		length,
-		data,
+	// create message
+	var msg Message = nil
+	switch typ {
+	case MessageTypeNop:
+		// no operation message
+		msg = &MessageNop{}
+
+	case MessageTypeRegister:
+		// register message
+		msg = &MessageRegister{}
+
+	default:
+		// invalid message
+		return nil
 	}
+
+	// fill message fields from data
+	err := json.Unmarshal(data, msg)
+	if err != nil {
+		return nil
+	}
+
+	// return msg
+	return msg
 }
 
 // writeMessage writes message to conn
