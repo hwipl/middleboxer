@@ -19,12 +19,21 @@ const (
 // Message types
 const (
 	MessageTypeNone = iota
+	MessageTypeNop
 	MessageTypeInvalid
 )
 
 // Message is an interface for all messages
 type Message interface {
 	GetType() uint8
+}
+
+// MessageNop is a no operation message
+type MessageNop struct{}
+
+// GetType returns the type of the message
+func (m *MessageNop) GetType() uint8 {
+	return MessageTypeNop
 }
 
 // TLVMessage is a TLV message
