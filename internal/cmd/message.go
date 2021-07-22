@@ -22,15 +22,15 @@ const (
 	MessageTypeInvalid
 )
 
-// Message is a TLV message
-type Message struct {
+// TLVMessage is a TLV message
+type TLVMessage struct {
 	Type   uint8
 	Length uint16
 	Data   []byte
 }
 
 // serialize encodes a message as bytes
-func (m *Message) serialize() []byte {
+func (m *TLVMessage) serialize() []byte {
 	var buf bytes.Buffer
 
 	err := binary.Write(&buf, binary.BigEndian, m)
@@ -71,7 +71,7 @@ func writeBytes(conn net.Conn, buf []byte) bool {
 }
 
 // readMessage reads the next Message from conn
-func readMessage(conn net.Conn) *Message {
+func readMessage(conn net.Conn) *TLVMessage {
 	// read header from connection
 	headerBytes := readBytes(conn, MessageHeaderLength)
 	if headerBytes == nil {
@@ -103,18 +103,18 @@ func readMessage(conn net.Conn) *Message {
 }
 
 // writeMessage writes message to conn
-func writeMessage(conn net.Conn, message *Message) bool {
+func writeMessage(conn net.Conn, message *TLVMessage) bool {
 	buf := message.serialize()
 	return writeBytes(conn, buf)
 }
 
 // newMessage creates a new Message with type and data
-func newMessage(typ uint8, data []byte) *Message {
+func newMessage(typ uint8, data []byte) *TLVMessage {
 	if len(data) > MessageMaxLength-MessageHeaderLength {
 		return nil
 	}
 
-	return &Message{
+	return &TLVMessage{
 		typ,
 		uint16(len(data)),
 		data,
