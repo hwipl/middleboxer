@@ -99,24 +99,15 @@ func readMessage(conn net.Conn) *TLVMessage {
 	}
 
 	// return message
-	return newMessage(typ, data)
+	return &TLVMessage{
+		typ,
+		length,
+		data,
+	}
 }
 
 // writeMessage writes message to conn
 func writeMessage(conn net.Conn, message *TLVMessage) bool {
 	buf := message.serialize()
 	return writeBytes(conn, buf)
-}
-
-// newMessage creates a new Message with type and data
-func newMessage(typ uint8, data []byte) *TLVMessage {
-	if len(data) > MessageMaxLength-MessageHeaderLength {
-		return nil
-	}
-
-	return &TLVMessage{
-		typ,
-		uint16(len(data)),
-		data,
-	}
 }
