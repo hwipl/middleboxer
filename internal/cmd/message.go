@@ -114,7 +114,7 @@ func readMessage(conn net.Conn) *TLVMessage {
 	}
 
 	// make sure message length is valid
-	if length > MessageMaxLength {
+	if length < MessageHeaderLength || length > MessageMaxLength {
 		return nil
 	}
 
