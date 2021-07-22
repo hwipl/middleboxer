@@ -22,6 +22,11 @@ const (
 	MessageTypeInvalid
 )
 
+// Message is an interface for all messages
+type Message interface {
+	GetType() uint8
+}
+
 // TLVMessage is a TLV message
 type TLVMessage struct {
 	Type   uint8
