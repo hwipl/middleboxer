@@ -20,6 +20,7 @@ const (
 const (
 	MessageTypeNone = iota
 	MessageTypeNop
+	MessageTypeRegister
 	MessageTypeInvalid
 )
 
@@ -34,6 +35,16 @@ type MessageNop struct{}
 // GetType returns the type of the message
 func (m *MessageNop) GetType() uint8 {
 	return MessageTypeNop
+}
+
+// MessageRegister is a register message
+type MessageRegister struct {
+	Client uint8
+}
+
+// GetType returns the type of the message
+func (m *MessageRegister) GetType() uint8 {
+	return MessageTypeRegister
 }
 
 // TLVMessage is a TLV message
