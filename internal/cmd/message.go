@@ -16,6 +16,12 @@ const (
 	MessageMaxLength = 4096
 )
 
+// Message types
+const (
+	MessageTypeNone = iota
+	MessageTypeInvalid
+)
+
 // Message is a TLV message
 type Message struct {
 	Type   uint8
@@ -76,12 +82,17 @@ func readMessage(conn net.Conn) *Message {
 	typ := headerBytes[0]
 	length := binary.BigEndian.Uint16(headerBytes[1:3])
 
-	// TODO: check types?
+	// make sure message type is valid
+	if typ == MessageTypeNone || typ >= MessageTypeInvalid {
+		return nil
+	}
 
-	// check length and read message data from connection
+	// make sure message length is valid
 	if length > MessageMaxLength {
 		return nil
 	}
+
+	// read remaining message data from connection
 	data := readBytes(conn, length-MessageHeaderLength)
 	if data == nil {
 		return nil
