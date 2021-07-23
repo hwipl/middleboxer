@@ -59,9 +59,16 @@ type TLVMessage struct {
 func (m *TLVMessage) serialize() []byte {
 	var buf bytes.Buffer
 
-	err := binary.Write(&buf, binary.BigEndian, m)
-	if err != nil {
-		log.Fatal(err)
+	var data = []interface{}{
+		m.Type,
+		m.Length,
+		m.Data,
+	}
+	for _, v := range data {
+		err := binary.Write(&buf, binary.BigEndian, v)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	return buf.Bytes()
