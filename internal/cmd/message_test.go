@@ -5,11 +5,13 @@ import (
 	"log"
 	"net"
 	"testing"
+	"time"
 )
 
 // TestReadWritebytes tests the readBytes() and writeBytes() functions
 func TestReadWriteBytes(t *testing.T) {
 	in, out := net.Pipe()
+	out.SetDeadline(time.Now().Add(time.Second))
 	data := []byte{1, 2, 3, 4, 5, 6}
 	go func() {
 		if !writeBytes(in, data) {
