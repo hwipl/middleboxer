@@ -24,3 +24,20 @@ func TestReadWriteBytes(t *testing.T) {
 		t.Errorf("got %v, want %v", got, want)
 	}
 }
+
+// TestReadWriteMessage tests the readMessage() and writeMessage() functions
+func TestReadWriteMessage(t *testing.T) {
+	in, out := net.Pipe()
+	out.SetDeadline(time.Now().Add(time.Second))
+	msg := &MessageNop{}
+	go func() {
+		if !writeMessage(in, msg) {
+			log.Fatal("error writing to conn")
+		}
+	}()
+	want := msg
+	got := readMessage(out)
+	if got != want {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
