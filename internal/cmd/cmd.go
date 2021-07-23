@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"flag"
+	"log"
+	"math"
 )
 
 var (
@@ -22,10 +24,16 @@ func parseCommandLine() {
 		"run as server (default: run as client)")
 	flag.StringVar(&serverAddress, "address", serverAddress,
 		"set address to connect to (client mode) or listen on (server mode)")
+	cid := flag.Uint("id", 0, "set id of the client")
 
 	// parse command line arguments
 	flag.Parse()
 
+	// set client id
+	if *cid > math.MaxUint8 {
+		log.Fatal("invalid client id")
+	}
+	clientId = uint8(*cid)
 }
 
 // Run is the main entry point
