@@ -10,6 +10,9 @@ var (
 
 	// serverAddress is the address of the server
 	serverAddress = ""
+
+	// clientId is the id of the client
+	clientId uint8 = 0
 )
 
 // parseCommandLine parses the command line arguments
@@ -36,5 +39,5 @@ func Run() {
 	}
 
 	// run as client
-	newClient(serverAddress).run()
+	newClient(serverAddress, clientId).run()
 }

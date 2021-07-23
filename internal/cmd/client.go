@@ -8,6 +8,7 @@ import (
 // client stores information about a client
 type client struct {
 	conn net.Conn
+	id   uint8
 }
 
 // run runs this client
@@ -20,7 +21,7 @@ func (c *client) run() {
 }
 
 // newClient connects to serverAddress and creates a new client
-func newClient(serverAddress string) *client {
+func newClient(serverAddress string, id uint8) *client {
 	// create connection to server
 	conn, err := net.Dial("tcp", serverAddress)
 	if err != nil {
@@ -30,5 +31,6 @@ func newClient(serverAddress string) *client {
 	// return client
 	return &client{
 		conn,
+		id,
 	}
 }
