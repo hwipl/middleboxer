@@ -41,3 +41,21 @@ func TestReadWriteMessage(t *testing.T) {
 		t.Errorf("got %v, want %v", got, want)
 	}
 }
+
+// TestMessageNop tests nop messages
+func TestMessageNop(t *testing.T) {
+	in, out := net.Pipe()
+	out.SetDeadline(time.Now().Add(time.Second))
+
+	msg := &MessageNop{}
+	go func() {
+		if !writeMessage(in, msg) {
+			log.Fatal("error writing to conn")
+		}
+	}()
+	want := msg.GetType()
+	got := readMessage(out).GetType()
+	if got != want {
+		t.Errorf("got %d, want %d", got, want)
+	}
+}
