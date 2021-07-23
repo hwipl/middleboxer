@@ -59,3 +59,24 @@ func TestMessageNop(t *testing.T) {
 		t.Errorf("got %d, want %d", got, want)
 	}
 }
+
+// TestMessageRegister tests register messages
+func TestMessageRegister(t *testing.T) {
+	in, out := net.Pipe()
+	out.SetDeadline(time.Now().Add(time.Second))
+
+	msg := &MessageRegister{Client: 1}
+	go func() {
+		if !writeMessage(in, msg) {
+			log.Fatal("error writing to conn")
+		}
+	}()
+	want := msg
+	got := readMessage(out)
+	if got.GetType() != want.GetType() {
+		t.Errorf("got %d, want %d", got.GetType(), want.GetType())
+	}
+	if *got.(*MessageRegister) != *want {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
