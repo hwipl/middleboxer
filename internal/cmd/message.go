@@ -78,7 +78,7 @@ func (m *TLVMessage) serialize() []byte {
 func readBytes(conn net.Conn, length uint16) []byte {
 	buf := make([]byte, length)
 	count := 0
-	for count < MessageHeaderLength {
+	for count < int(length) {
 		n, err := conn.Read(buf[count:])
 		if err != nil {
 			log.Printf("Connection to %s: %s\n",
