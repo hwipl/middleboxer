@@ -11,6 +11,15 @@ type client struct {
 	id   uint8
 }
 
+// registerClient registers this client on the server
+func (c *client) registerClient() bool {
+	reg := MessageRegister{c.id}
+	if !writeMessage(c.conn, &reg) {
+		return false
+	}
+	return true
+}
+
 // run runs this client
 func (c *client) run() {
 	defer func() {
@@ -18,6 +27,9 @@ func (c *client) run() {
 	}()
 
 	log.Println("Client connected to:", c.conn.RemoteAddr())
+	if !c.registerClient() {
+		return
+	}
 }
 
 // newClient connects to serverAddress and creates a new client
