@@ -34,14 +34,15 @@ func (s *server) handleClient(client net.Conn) {
 		_ = client.Close()
 	}()
 
-	log.Println("Client connected:", client.RemoteAddr())
+	log.Printf("Client %s connected", client.RemoteAddr())
 
 	// await client registration
 	clientId, ok := s.registerClient(client)
 	if !ok {
 		return
 	}
-	log.Println("Client registered with id", clientId)
+	log.Printf("Client %s registered with id %d", client.RemoteAddr(),
+		clientId)
 
 	// enter main loop
 	for {
@@ -56,7 +57,8 @@ func (s *server) handleClient(client net.Conn) {
 		case MessageTypeNop:
 		default:
 			// invalid client message; disconnect client
-			log.Println("Invalid message from client")
+			log.Println("Invalid message from client",
+				client.RemoteAddr())
 			break
 		}
 	}
