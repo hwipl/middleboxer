@@ -42,6 +42,24 @@ func (s *server) handleClient(client net.Conn) {
 		return
 	}
 	log.Println("Client registered with id", clientId)
+
+	// enter main loop
+	for {
+		// read message from client
+		msg := readMessage(client)
+		if msg == nil {
+			break
+		}
+
+		// handle message based on type
+		switch msg.GetType() {
+		case MessageTypeNop:
+		default:
+			// invalid client message; disconnect client
+			log.Println("Invalid message from client")
+			break
+		}
+	}
 }
 
 // run runs this server
