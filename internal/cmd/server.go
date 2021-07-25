@@ -10,6 +10,24 @@ type server struct {
 	listener net.Listener
 }
 
+// registerClient reads a client registration from client and returns
+// client id and ok
+func (s *server) registerClient(client net.Conn) (clientId uint8, ok bool) {
+	// read message from client
+	msg := readMessage(client)
+	if msg == nil {
+		return
+	}
+
+	// handle register message
+	if msg.GetType() != MessageTypeRegister {
+		return
+	}
+	clientId = msg.(*MessageRegister).Client
+	ok = true
+	return
+}
+
 // handleClient handles a client connection
 func (s *server) handleClient(client net.Conn) {
 	defer func() {
@@ -17,6 +35,13 @@ func (s *server) handleClient(client net.Conn) {
 	}()
 
 	log.Println("Client connected:", client.RemoteAddr())
+
+	// await client registration
+	clientId, ok := s.registerClient(client)
+	if !ok {
+		return
+	}
+	log.Println("Client registered with id", clientId)
 }
 
 // run runs this server
