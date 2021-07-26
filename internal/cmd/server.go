@@ -8,31 +8,31 @@ import (
 // clientHandler handles a client connected to the server
 type clientHandler struct {
 	conn net.Conn
+	id   uint8
 }
 
 // newClientHandler creates a new client handler with conn
 func newClientHandler(conn net.Conn) *clientHandler {
 	return &clientHandler{
 		conn,
+		0,
 	}
 }
 
-// registerClient reads a client registration from client and returns
-// client id and ok
-func (c *clientHandler) registerClient() (clientId uint8, ok bool) {
+// registerClient reads a client registration from client and returns ok
+func (c *clientHandler) registerClient() bool {
 	// read message from client
 	msg := readMessage(c.conn)
 	if msg == nil {
-		return
+		return false
 	}
 
 	// handle register message
 	if msg.GetType() != MessageTypeRegister {
-		return
+		return false
 	}
-	clientId = msg.(*MessageRegister).Client
-	ok = true
-	return
+	c.id = msg.(*MessageRegister).Client
+	return true
 }
 
 // handleClient handles a client connection
@@ -44,12 +44,11 @@ func (c *clientHandler) run() {
 	log.Printf("Client %s connected", c.conn.RemoteAddr())
 
 	// await client registration
-	clientId, ok := c.registerClient()
-	if !ok {
+	if ok := c.registerClient(); !ok {
 		return
 	}
 	log.Printf("Client %s registered with id %d", c.conn.RemoteAddr(),
-		clientId)
+		c.id)
 
 	// enter main loop
 	for {
