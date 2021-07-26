@@ -5,6 +5,18 @@ import (
 	"net"
 )
 
+// clientHandler handles a client connected to the server
+type clientHandler struct {
+	conn net.Conn
+}
+
+// newClientHandler creates a new client handler with conn
+func newClientHandler(conn net.Conn) *clientHandler {
+	return &clientHandler{
+		conn,
+	}
+}
+
 // server stores information about a server
 type server struct {
 	listener net.Listener
