@@ -17,16 +17,11 @@ func newClientHandler(conn net.Conn) *clientHandler {
 	}
 }
 
-// server stores information about a server
-type server struct {
-	listener net.Listener
-}
-
 // registerClient reads a client registration from client and returns
 // client id and ok
-func (s *server) registerClient(client net.Conn) (clientId uint8, ok bool) {
+func (c *clientHandler) registerClient() (clientId uint8, ok bool) {
 	// read message from client
-	msg := readMessage(client)
+	msg := readMessage(c.conn)
 	if msg == nil {
 		return
 	}
@@ -41,25 +36,25 @@ func (s *server) registerClient(client net.Conn) (clientId uint8, ok bool) {
 }
 
 // handleClient handles a client connection
-func (s *server) handleClient(client net.Conn) {
+func (c *clientHandler) run() {
 	defer func() {
-		_ = client.Close()
+		_ = c.conn.Close()
 	}()
 
-	log.Printf("Client %s connected", client.RemoteAddr())
+	log.Printf("Client %s connected", c.conn.RemoteAddr())
 
 	// await client registration
-	clientId, ok := s.registerClient(client)
+	clientId, ok := c.registerClient()
 	if !ok {
 		return
 	}
-	log.Printf("Client %s registered with id %d", client.RemoteAddr(),
+	log.Printf("Client %s registered with id %d", c.conn.RemoteAddr(),
 		clientId)
 
 	// enter main loop
 	for {
 		// read message from client
-		msg := readMessage(client)
+		msg := readMessage(c.conn)
 		if msg == nil {
 			break
 		}
@@ -70,10 +65,15 @@ func (s *server) handleClient(client net.Conn) {
 		default:
 			// invalid client message; disconnect client
 			log.Println("Invalid message from client",
-				client.RemoteAddr())
+				c.conn.RemoteAddr())
 			break
 		}
 	}
+}
+
+// server stores information about a server
+type server struct {
+	listener net.Listener
 }
 
 // run runs this server
@@ -88,7 +88,7 @@ func (s *server) run() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		go s.handleClient(client)
+		go newClientHandler(client).run()
 	}
 }
 
