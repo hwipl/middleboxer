@@ -72,8 +72,9 @@ func (c *clientHandler) run() {
 
 // server stores information about a server
 type server struct {
-	listener net.Listener
-	clients  map[uint8]*clientHandler
+	listener   net.Listener
+	clientRegs chan *clientHandler
+	clients    map[uint8]*clientHandler
 }
 
 // listen waits for new connections from clients
@@ -88,13 +89,20 @@ func (s *server) listen() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		go newClientHandler(client).run()
+		go newClientHandler(client, s.clientRegs).run()
 	}
 }
 
 // run runs this server
 func (s *server) run() {
-	s.listen()
+	go s.listen()
+
+	for {
+		select {
+		case c := <-s.clientRegs:
+			s.clients[c.id] = c
+		}
+	}
 }
 
 // newServer creates an new server that listens on address
@@ -108,6 +116,7 @@ func newServer(address string) *server {
 	// return server
 	return &server{
 		listener,
+		make(chan *clientHandler),
 		make(map[uint8]*clientHandler),
 	}
 }
