@@ -7,15 +7,17 @@ import (
 
 // clientHandler handles a client connected to the server
 type clientHandler struct {
-	conn net.Conn
-	id   uint8
+	conn       net.Conn
+	id         uint8
+	clientRegs chan *clientHandler
 }
 
 // newClientHandler creates a new client handler with conn
-func newClientHandler(conn net.Conn) *clientHandler {
+func newClientHandler(conn net.Conn, clientRegs chan *clientHandler) *clientHandler {
 	return &clientHandler{
 		conn,
 		0,
+		clientRegs,
 	}
 }
 
@@ -47,6 +49,7 @@ func (c *clientHandler) run() {
 	if ok := c.registerClient(); !ok {
 		return
 	}
+	c.clientRegs <- c
 	log.Printf("Client %s registered with id %d", c.conn.RemoteAddr(),
 		c.id)
 
