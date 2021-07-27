@@ -73,6 +73,7 @@ func (c *clientHandler) run() {
 // server stores information about a server
 type server struct {
 	listener net.Listener
+	clients  map[uint8]*clientHandler
 }
 
 // run runs this server
@@ -102,5 +103,6 @@ func newServer(address string) *server {
 	// return server
 	return &server{
 		listener,
+		make(map[uint8]*clientHandler),
 	}
 }
