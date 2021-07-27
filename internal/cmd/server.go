@@ -76,8 +76,8 @@ type server struct {
 	clients  map[uint8]*clientHandler
 }
 
-// run runs this server
-func (s *server) run() {
+// listen waits for new connections from clients
+func (s *server) listen() {
 	defer func() {
 		_ = s.listener.Close()
 	}()
@@ -90,6 +90,11 @@ func (s *server) run() {
 		}
 		go newClientHandler(client).run()
 	}
+}
+
+// run runs this server
+func (s *server) run() {
+	s.listen()
 }
 
 // newServer creates an new server that listens on address
