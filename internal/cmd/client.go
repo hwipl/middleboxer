@@ -3,6 +3,12 @@ package cmd
 import (
 	"log"
 	"net"
+	"time"
+)
+
+const (
+	// NopInterval specifies the seconds between sending nop messages
+	NopInterval = 15
 )
 
 // client stores information about a client
@@ -36,6 +42,20 @@ func (c *client) run() {
 		return
 	}
 	log.Println("Client registered on server")
+
+	// create ticker for nop messages
+	ticker := time.NewTicker(time.Second * NopInterval)
+	defer ticker.Stop()
+
+	log.Println("Client ready and waiting for test commands")
+	for {
+		select {
+		case <-ticker.C:
+			if !c.sendNop() {
+				return
+			}
+		}
+	}
 }
 
 // newClient connects to serverAddress and creates a new client
