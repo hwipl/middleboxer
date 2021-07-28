@@ -17,6 +17,12 @@ func (c *client) registerClient() bool {
 	return writeMessage(c.conn, &reg)
 }
 
+// sendNop sends a nop message to the server
+func (c *client) sendNop() bool {
+	nop := MessageNop{}
+	return writeMessage(c.conn, &nop)
+}
+
 // run runs this client
 func (c *client) run() {
 	defer func() {
