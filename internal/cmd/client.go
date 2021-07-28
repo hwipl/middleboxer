@@ -14,10 +14,7 @@ type client struct {
 // registerClient registers this client on the server
 func (c *client) registerClient() bool {
 	reg := MessageRegister{c.id}
-	if !writeMessage(c.conn, &reg) {
-		return false
-	}
-	return true
+	return writeMessage(c.conn, &reg)
 }
 
 // run runs this client
