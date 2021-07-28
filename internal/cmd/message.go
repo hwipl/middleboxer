@@ -22,6 +22,7 @@ const (
 	MessageTypeNone = iota
 	MessageTypeNop
 	MessageTypeRegister
+	MessageTypeTest
 	MessageTypeInvalid
 )
 
@@ -46,6 +47,25 @@ type MessageRegister struct {
 // GetType returns the type of the message
 func (m *MessageRegister) GetType() uint8 {
 	return MessageTypeRegister
+}
+
+// MessageTest is a test command message
+type MessageTest struct {
+	ID       uint32
+	Initiate bool
+	Device   string
+	SrcMAC   net.HardwareAddr
+	DstMAC   net.HardwareAddr
+	SrcIP    net.IP
+	DstIP    net.IP
+	Protocol uint16
+	SrcPort  uint16
+	DstPort  uint16
+}
+
+// GetType returns the type of the message
+func (m *MessageTest) GetType() uint8 {
+	return MessageTypeTest
 }
 
 // TLVMessage is a TLV message
@@ -141,6 +161,10 @@ func readMessage(conn net.Conn) Message {
 	case MessageTypeRegister:
 		// register message
 		msg = &MessageRegister{}
+
+	case MessageTypeTest:
+		// test message
+		msg = &MessageTest{}
 
 	default:
 		// invalid message
