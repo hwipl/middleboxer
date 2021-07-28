@@ -30,9 +30,12 @@ func (c *client) run() {
 	}()
 
 	log.Println("Client connected to:", c.conn.RemoteAddr())
+
+	// register client
 	if !c.registerClient() {
 		return
 	}
+	log.Println("Client registered on server")
 }
 
 // newClient connects to serverAddress and creates a new client
