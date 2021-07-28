@@ -23,6 +23,7 @@ const (
 	MessageTypeNop
 	MessageTypeRegister
 	MessageTypeTest
+	MessageTypeResult
 	MessageTypeInvalid
 )
 
@@ -66,6 +67,17 @@ type MessageTest struct {
 // GetType returns the type of the message
 func (m *MessageTest) GetType() uint8 {
 	return MessageTypeTest
+}
+
+// MessageResult is a test result message
+type MessageResult struct {
+	ID     uint32
+	Result uint8
+}
+
+// GetType returns the type of the message
+func (m *MessageResult) GetType() uint8 {
+	return MessageTypeResult
 }
 
 // TLVMessage is a TLV message
@@ -165,6 +177,10 @@ func readMessage(conn net.Conn) Message {
 	case MessageTypeTest:
 		// test message
 		msg = &MessageTest{}
+
+	case MessageTypeResult:
+		// result message
+		msg = &MessageResult{}
 
 	default:
 		// invalid message
