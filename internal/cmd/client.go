@@ -15,6 +15,7 @@ const (
 type client struct {
 	conn    net.Conn
 	id      uint8
+	tests   chan *MessageTest
 	results chan *MessageResult
 }
 
@@ -71,6 +72,7 @@ func newClient(serverAddress string, id uint8) *client {
 	return &client{
 		conn,
 		id,
+		make(chan *MessageTest),
 		make(chan *MessageResult),
 	}
 }
