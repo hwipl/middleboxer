@@ -31,6 +31,28 @@ func (c *client) sendNop() bool {
 	return writeMessage(c.conn, &nop)
 }
 
+// receive gets messages from the server
+func (c *client) receive() {
+	for {
+		// read message from server
+		msg := readMessage(c.conn)
+		if msg == nil {
+			return
+		}
+
+		// handle test command messages
+		if msg.GetType() != MessageTypeTest {
+			continue
+		}
+		test, ok := msg.(*MessageTest)
+		if !ok {
+			log.Println("Received invalid test message from server")
+			continue
+		}
+		c.tests <- test
+	}
+}
+
 // run runs this client
 func (c *client) run() {
 	defer func() {
