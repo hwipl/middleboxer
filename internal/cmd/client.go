@@ -13,8 +13,9 @@ const (
 
 // client stores information about a client
 type client struct {
-	conn net.Conn
-	id   uint8
+	conn    net.Conn
+	id      uint8
+	results chan *MessageResult
 }
 
 // registerClient registers this client on the server
@@ -70,5 +71,6 @@ func newClient(serverAddress string, id uint8) *client {
 	return &client{
 		conn,
 		id,
+		make(chan *MessageResult),
 	}
 }
