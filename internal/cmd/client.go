@@ -31,6 +31,11 @@ func (c *client) sendNop() bool {
 	return writeMessage(c.conn, &nop)
 }
 
+// sendResult returns the result message to the server
+func (c *client) sendResult(result *MessageResult) bool {
+	return writeMessage(c.conn, result)
+}
+
 // receive gets messages from the server
 func (c *client) receive() {
 	for {
@@ -76,6 +81,10 @@ func (c *client) run() {
 		select {
 		case <-ticker.C:
 			if !c.sendNop() {
+				return
+			}
+		case result := <-c.results:
+			if !c.sendResult(result) {
 				return
 			}
 		}
