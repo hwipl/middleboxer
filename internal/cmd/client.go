@@ -58,6 +58,11 @@ func (c *client) receive() {
 	}
 }
 
+// runTest runs the test requested by the server in the test message
+func (c *client) runTest(test *MessageTest) {
+	// TODO: do something
+}
+
 // run runs this client
 func (c *client) run() {
 	defer func() {
@@ -76,6 +81,9 @@ func (c *client) run() {
 	ticker := time.NewTicker(time.Second * NopInterval)
 	defer ticker.Stop()
 
+	// start receiving messages
+	go c.receive()
+
 	log.Println("Client ready and waiting for test commands")
 	for {
 		select {
@@ -83,6 +91,8 @@ func (c *client) run() {
 			if !c.sendNop() {
 				return
 			}
+		case test := <-c.tests:
+			c.runTest(test)
 		case result := <-c.results:
 			if !c.sendResult(result) {
 				return
