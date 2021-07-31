@@ -13,8 +13,8 @@ var (
 	// serverAddress is the address of the server
 	serverAddress = ""
 
-	// clientId is the id of the client
-	clientId uint8 = 0
+	// clientID is the id of the client
+	clientID uint8 = 0
 )
 
 // parseCommandLine parses the command line arguments
@@ -33,7 +33,7 @@ func parseCommandLine() {
 	if *cid > math.MaxUint8 {
 		log.Fatal("invalid client id")
 	}
-	clientId = uint8(*cid)
+	clientID = uint8(*cid)
 }
 
 // Run is the main entry point
@@ -47,5 +47,5 @@ func Run() {
 	}
 
 	// run as client
-	newClient(serverAddress, clientId).run()
+	newClient(serverAddress, clientID).run()
 }
