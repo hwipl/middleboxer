@@ -69,6 +69,12 @@ func (m *MessageTest) GetType() uint8 {
 	return MessageTypeTest
 }
 
+// Test result values
+const (
+	ResultNone = iota
+	ResultInvalid
+)
+
 // MessageResult is a test result message
 type MessageResult struct {
 	ID     uint32
