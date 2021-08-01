@@ -78,6 +78,20 @@ func (r *receiver) handleIPv6(packet gopacket.Packet) bool {
 	return r.checkIPs(ip.SrcIP, ip.DstIP)
 }
 
+// handleIP checks if IPv4 or IPv6 values in packet match the current test
+func (r *receiver) handleIP(packet gopacket.Packet) bool {
+	// if we do not care about ip addresses, skip the following checks
+	if r.test.SrcIP == nil && r.test.DstIP == nil {
+		return true
+	}
+
+	// check ipv4 or ipv6 addresses
+	if r.test.SrcIP.To4() != nil {
+		return r.handleIPv4(packet)
+	}
+	return r.handleIPv6(packet)
+}
+
 // HandlePacket handles a packet received via pcap
 func (r *receiver) HandlePacket(packet gopacket.Packet) {
 	// check ethernet
@@ -85,7 +99,12 @@ func (r *receiver) HandlePacket(packet gopacket.Packet) {
 		return
 	}
 
-	// TODO: check ips, l4 protocol, ports, send result back, stop listener
+	// check ip
+	if !r.handleIP(packet) {
+		return
+	}
+
+	// TODO: l4 protocol, ports, send result back, stop listener
 }
 
 // run runs the receiver
