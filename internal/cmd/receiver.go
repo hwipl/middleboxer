@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"bytes"
+
 	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 	"github.com/hwipl/packet-go/pkg/pcap"
 )
 
@@ -11,9 +14,39 @@ type receiver struct {
 	results chan *MessageResult
 }
 
+// handleEthernet checks if ethernet values in packet match the current test
+func (r *receiver) handleEthernet(packet gopacket.Packet) bool {
+	// if we do not care about mac addresses, skip the following checks
+	if r.test.SrcMAC == nil && r.test.DstMAC == nil {
+		return true
+	}
+
+	// get ethernet header
+	ethLayer := packet.Layer(layers.LayerTypeEthernet)
+	if ethLayer == nil {
+		return false
+	}
+	eth, _ := ethLayer.(*layers.Ethernet)
+
+	// check mac addresses
+	if r.test.SrcMAC != nil && !bytes.Equal(eth.SrcMAC, r.test.SrcMAC) {
+		return false
+	}
+	if r.test.DstMAC != nil && !bytes.Equal(eth.DstMAC, r.test.DstMAC) {
+		return false
+	}
+
+	return true
+}
+
 // HandlePacket handles a packet received via pcap
 func (r *receiver) HandlePacket(packet gopacket.Packet) {
-	// TODO: do something
+	// check ethernet
+	if !r.handleEthernet(packet) {
+		return
+	}
+
+	// TODO: check ips, l4 protocol, ports, send result back, stop listener
 }
 
 // run runs the receiver
