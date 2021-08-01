@@ -104,6 +104,24 @@ func (r *receiver) checkPorts(src, dst uint16) bool {
 	return true
 }
 
+// handleTCP checks if tcp values in packet match the current test
+func (r *receiver) handleTCP(packet gopacket.Packet) bool {
+	// if we do not care about ports, skip the following checks
+	if r.test.SrcPort == 0 && r.test.DstPort == 0 {
+		return true
+	}
+
+	// get tcp header
+	tcpLayer := packet.Layer(layers.LayerTypeTCP)
+	if tcpLayer == nil {
+		return false
+	}
+	tcp, _ := tcpLayer.(*layers.TCP)
+
+	// check ports
+	return r.checkPorts(uint16(tcp.SrcPort), uint16(tcp.DstPort))
+}
+
 // HandlePacket handles a packet received via pcap
 func (r *receiver) HandlePacket(packet gopacket.Packet) {
 	// check ethernet
