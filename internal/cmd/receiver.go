@@ -65,6 +65,19 @@ func (r *receiver) handleIPv4(packet gopacket.Packet) bool {
 	return r.checkIPs(ip.SrcIP, ip.DstIP)
 }
 
+// handleIPv6 checks if IPv6 values in packet match the current test
+func (r *receiver) handleIPv6(packet gopacket.Packet) bool {
+	// get ip header
+	ipLayer := packet.Layer(layers.LayerTypeIPv6)
+	if ipLayer == nil {
+		return false
+	}
+	ip, _ := ipLayer.(*layers.IPv6)
+
+	// check ip addresses
+	return r.checkIPs(ip.SrcIP, ip.DstIP)
+}
+
 // HandlePacket handles a packet received via pcap
 func (r *receiver) HandlePacket(packet gopacket.Packet) {
 	// check ethernet
