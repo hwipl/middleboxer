@@ -50,6 +50,13 @@ func (m *MessageRegister) GetType() uint8 {
 	return MessageTypeRegister
 }
 
+// Protocol types
+const (
+	ProtocolNone = 0
+	ProtocolTCP  = 6
+	ProtocolUDP  = 17
+)
+
 // MessageTest is a test command message
 type MessageTest struct {
 	ID       uint32

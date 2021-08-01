@@ -140,6 +140,32 @@ func (r *receiver) handleUDP(packet gopacket.Packet) bool {
 	return r.checkPorts(uint16(udp.SrcPort), uint16(udp.DstPort))
 }
 
+// handleL4 checks if L4 values in packet match the current test
+func (r *receiver) handleL4(packet gopacket.Packet) bool {
+	// if we do not care about l4, skip the following checks
+	if r.test.Protocol == ProtocolNone {
+		return true
+	}
+
+	// check tcp
+	if tcpLayer := packet.Layer(layers.LayerTypeTCP); tcpLayer != nil {
+		if r.test.Protocol != ProtocolTCP {
+			return false
+		}
+		return r.handleTCP(packet)
+	}
+
+	// check udp
+	if udpLayer := packet.Layer(layers.LayerTypeUDP); udpLayer != nil {
+		if r.test.Protocol != ProtocolUDP {
+			return false
+		}
+		return r.handleUDP(packet)
+	}
+
+	return false
+}
+
 // HandlePacket handles a packet received via pcap
 func (r *receiver) HandlePacket(packet gopacket.Packet) {
 	// check ethernet
@@ -152,7 +178,12 @@ func (r *receiver) HandlePacket(packet gopacket.Packet) {
 		return
 	}
 
-	// TODO: l4 protocol, ports, send result back, stop listener
+	// check layer 4
+	if !r.handleL4(packet) {
+		return
+	}
+
+	// TODO: send result back, stop listener
 }
 
 // run runs the receiver
