@@ -122,6 +122,24 @@ func (r *receiver) handleTCP(packet gopacket.Packet) bool {
 	return r.checkPorts(uint16(tcp.SrcPort), uint16(tcp.DstPort))
 }
 
+// handleUDP checks if udp values in packet match the current test
+func (r *receiver) handleUDP(packet gopacket.Packet) bool {
+	// if we do not care about ports, skip the following checks
+	if r.test.SrcPort == 0 && r.test.DstPort == 0 {
+		return true
+	}
+
+	// get udp header
+	udpLayer := packet.Layer(layers.LayerTypeUDP)
+	if udpLayer == nil {
+		return false
+	}
+	udp, _ := udpLayer.(*layers.UDP)
+
+	// check ports
+	return r.checkPorts(uint16(udp.SrcPort), uint16(udp.DstPort))
+}
+
 // HandlePacket handles a packet received via pcap
 func (r *receiver) HandlePacket(packet gopacket.Packet) {
 	// check ethernet
