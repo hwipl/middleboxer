@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"net"
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
@@ -33,6 +34,18 @@ func (r *receiver) handleEthernet(packet gopacket.Packet) bool {
 		return false
 	}
 	if r.test.DstMAC != nil && !bytes.Equal(eth.DstMAC, r.test.DstMAC) {
+		return false
+	}
+
+	return true
+}
+
+// checkIPs checks if src and dst ip addresses match current test
+func (r *receiver) checkIPs(src, dst net.IP) bool {
+	if r.test.SrcIP != nil && !r.test.SrcIP.Equal(src) {
+		return false
+	}
+	if r.test.DstIP != nil && !r.test.SrcIP.Equal(dst) {
 		return false
 	}
 
