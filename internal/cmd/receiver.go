@@ -92,6 +92,18 @@ func (r *receiver) handleIP(packet gopacket.Packet) bool {
 	return r.handleIPv6(packet)
 }
 
+// checkPorts checks if src and dst ports match current test
+func (r *receiver) checkPorts(src, dst uint16) bool {
+	if r.test.SrcPort != 0 && r.test.SrcPort != src {
+		return false
+	}
+	if r.test.DstPort != 0 && r.test.DstPort != dst {
+		return false
+	}
+
+	return true
+}
+
 // HandlePacket handles a packet received via pcap
 func (r *receiver) HandlePacket(packet gopacket.Packet) {
 	// check ethernet
