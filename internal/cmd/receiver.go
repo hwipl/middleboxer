@@ -183,7 +183,13 @@ func (r *receiver) HandlePacket(packet gopacket.Packet) {
 		return
 	}
 
-	// TODO: send result back, stop listener
+	// send result back to server
+	r.results <- &MessageResult{
+		r.test.ID,
+		ResultPass,
+	}
+
+	// TODO: stop listener
 }
 
 // run runs the receiver
