@@ -203,7 +203,12 @@ func (r *receiver) run() {
 	// prepare listener
 	listener.Prepare()
 
-	// TODO: start loop, inform server
+	// start listener loop and tell server we are are ready
+	go listener.Loop()
+	r.results <- &MessageResult{
+		r.test.ID,
+		ResultReady,
+	}
 }
 
 // newReceiver creates a new test in receiver mode

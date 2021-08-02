@@ -79,6 +79,7 @@ func (m *MessageTest) GetType() uint8 {
 // Test result values
 const (
 	ResultNone = iota
+	ResultReady
 	ResultPass
 	ResultInvalid
 )
