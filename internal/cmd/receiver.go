@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	"github.com/hwipl/packet-go/pkg/pcap"
 )
 
 // receiver is a test in receiver mode
@@ -194,17 +193,9 @@ func (r *receiver) HandlePacket(packet gopacket.Packet) {
 
 // run runs the receiver
 func (r *receiver) run() {
-	// create listener
-	listener := pcap.Listener{
-		PacketHandler: r,
-		Device:        r.test.Device,
-	}
-
-	// prepare listener
-	listener.Prepare()
-
-	// start listener loop and tell server we are are ready
-	go listener.Loop()
+	// register receiver as packet handler on device and
+	// tell server we are are ready
+	packetListeners.get(r.test.Device).register(r)
 	r.results <- &MessageResult{
 		r.test.ID,
 		ResultReady,
