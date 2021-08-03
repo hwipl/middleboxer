@@ -30,6 +30,11 @@ func (p *packetListener) register(handler pcap.PacketHandler) {
 	p.regs <- packetListenerReg{true, handler}
 }
 
+// deregister deregisters the packet handler on this packet listener
+func (p *packetListener) deregister(handler pcap.PacketHandler) {
+	p.regs <- packetListenerReg{false, handler}
+}
+
 // addHandler adds the packet handler to the packet listener
 func (p *packetListener) addHandler(handler pcap.PacketHandler) {
 	for _, h := range p.handlers {
