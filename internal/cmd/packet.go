@@ -8,6 +8,7 @@ import (
 // packetListener is a pcap packet listener
 type packetListener struct {
 	listener pcap.Listener
+	handlers []pcap.PacketHandler
 	packets  chan gopacket.Packet
 }
 
@@ -25,6 +26,9 @@ func (p *packetListener) loop() {
 			// handle packets coming from pcap
 			if !more {
 				return
+			}
+			for _, h := range p.handlers {
+				h.HandlePacket(packet)
 			}
 		}
 	}
