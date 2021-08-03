@@ -5,6 +5,33 @@ import (
 	"github.com/hwipl/packet-go/pkg/pcap"
 )
 
+var (
+	// packetListeners is a map of all packet listeners
+	packetListeners = newPacketListenerMap()
+)
+
+// packetListenerMap is a collection of packet listeners
+type packetListenerMap struct {
+	listeners map[string]*packetListener
+}
+
+// get returns the packet listener listening on device
+func (p packetListenerMap) get(device string) *packetListener {
+	if l := p.listeners[device]; l != nil {
+		return l
+	}
+	l := newPacketListener(device)
+	p.listeners[device] = l
+	return l
+}
+
+// newPacketListenerMap creates a packet listener map
+func newPacketListenerMap() *packetListenerMap {
+	return &packetListenerMap{
+		make(map[string]*packetListener),
+	}
+}
+
 // packetListenerReg is a (de)register message for the packet listener
 type packetListenerReg struct {
 	add     bool
