@@ -25,6 +25,16 @@ func (p *packetListener) HandlePacket(packet gopacket.Packet) {
 	p.packets <- packet
 }
 
+// addHandler adds the packet handler to the packet listener
+func (p *packetListener) addHandler(handler pcap.PacketHandler) {
+	for _, h := range p.handlers {
+		if h == handler {
+			return
+		}
+	}
+	p.handlers = append(p.handlers, handler)
+}
+
 // removeHandler removes the packet handler from the packet listener
 func (p *packetListener) removeHandler(handler pcap.PacketHandler) {
 	for i, h := range p.handlers {
@@ -56,7 +66,7 @@ func (p *packetListener) loop() {
 				return
 			}
 			if reg.add {
-				// TODO: add handler
+				p.addHandler(reg.handler)
 			} else {
 				p.removeHandler(reg.handler)
 			}
