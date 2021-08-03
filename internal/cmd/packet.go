@@ -25,6 +25,17 @@ func (p *packetListener) HandlePacket(packet gopacket.Packet) {
 	p.packets <- packet
 }
 
+// removeHandler removes the packet handler from the packet listener
+func (p *packetListener) removeHandler(handler pcap.PacketHandler) {
+	for i, h := range p.handlers {
+		if h == handler {
+			p.handlers = append(p.handlers[:i],
+				p.handlers[i+1:]...)
+			return
+		}
+	}
+}
+
 // loop is the main loop of this packet listener
 func (p *packetListener) loop() {
 	for {
@@ -43,6 +54,11 @@ func (p *packetListener) loop() {
 			// handle packet handler (de)registrations
 			if !more {
 				return
+			}
+			if reg.add {
+				// TODO: add handler
+			} else {
+				p.removeHandler(reg.handler)
 			}
 		}
 	}
