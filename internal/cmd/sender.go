@@ -2,8 +2,9 @@ package cmd
 
 // sender is a test in sender mode
 type sender struct {
-	test    *MessageTest
-	results chan *MessageResult
+	test     *MessageTest
+	results  chan *MessageResult
+	listener *packetListener
 }
 
 // run runs the sender
@@ -16,5 +17,6 @@ func newSender(test *MessageTest, results chan *MessageResult) *sender {
 	return &sender{
 		test,
 		results,
+		packetListeners.get(test.Device),
 	}
 }
