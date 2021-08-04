@@ -62,6 +62,11 @@ func (p *packetListener) deregister(handler pcap.PacketHandler) {
 	p.regs <- packetListenerReg{false, handler}
 }
 
+// send sends packet out of this packet listener
+func (p *packetListener) send(packet []byte) error {
+	return p.listener.PcapHandle.WritePacketData(packet)
+}
+
 // addHandler adds the packet handler to the packet listener
 func (p *packetListener) addHandler(handler pcap.PacketHandler) {
 	for _, h := range p.handlers {
