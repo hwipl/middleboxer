@@ -11,7 +11,9 @@ import (
 // TestReadWritebytes tests the readBytes() and writeBytes() functions
 func TestReadWriteBytes(t *testing.T) {
 	in, out := net.Pipe()
-	out.SetDeadline(time.Now().Add(time.Second))
+	if err := out.SetDeadline(time.Now().Add(time.Second)); err != nil {
+		log.Fatal(err)
+	}
 	data := []byte{1, 2, 3, 4, 5, 6}
 	go func() {
 		if !writeBytes(in, data) {
@@ -28,7 +30,9 @@ func TestReadWriteBytes(t *testing.T) {
 // TestReadWriteMessage tests the readMessage() and writeMessage() functions
 func TestReadWriteMessage(t *testing.T) {
 	in, out := net.Pipe()
-	out.SetDeadline(time.Now().Add(time.Second))
+	if err := out.SetDeadline(time.Now().Add(time.Second)); err != nil {
+		log.Fatal(err)
+	}
 	msg := &MessageNop{}
 	go func() {
 		if !writeMessage(in, msg) {
@@ -45,7 +49,9 @@ func TestReadWriteMessage(t *testing.T) {
 // TestMessageNop tests nop messages
 func TestMessageNop(t *testing.T) {
 	in, out := net.Pipe()
-	out.SetDeadline(time.Now().Add(time.Second))
+	if err := out.SetDeadline(time.Now().Add(time.Second)); err != nil {
+		log.Fatal(err)
+	}
 
 	msg := &MessageNop{}
 	go func() {
@@ -63,7 +69,9 @@ func TestMessageNop(t *testing.T) {
 // TestMessageRegister tests register messages
 func TestMessageRegister(t *testing.T) {
 	in, out := net.Pipe()
-	out.SetDeadline(time.Now().Add(time.Second))
+	if err := out.SetDeadline(time.Now().Add(time.Second)); err != nil {
+		log.Fatal(err)
+	}
 
 	msg := &MessageRegister{Client: 1}
 	go func() {
