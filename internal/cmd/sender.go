@@ -2,11 +2,14 @@ package cmd
 
 import (
 	"log"
+
+	"github.com/google/gopacket"
 )
 
 // senderPacket is a test packet sent by the sender
 type senderPacket struct {
 	test   *MessageTest
+	layers []gopacket.SerializableLayer
 	b      []byte
 }
 
@@ -19,6 +22,7 @@ func (s *senderPacket) bytes() []byte {
 func newSenderPacket(test *MessageTest) *senderPacket {
 	s := senderPacket{
 		test,
+		[]gopacket.SerializableLayer{},
 		[]byte{},
 	}
 	return &s
