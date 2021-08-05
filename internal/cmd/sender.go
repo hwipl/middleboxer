@@ -4,6 +4,26 @@ import (
 	"log"
 )
 
+// senderPacket is a test packet sent by the sender
+type senderPacket struct {
+	test   *MessageTest
+	b      []byte
+}
+
+// bytes returns the packet as bytes
+func (s *senderPacket) bytes() []byte {
+	return s.b
+}
+
+// newSenderPacket creates a new packet to send
+func newSenderPacket(test *MessageTest) *senderPacket {
+	s := senderPacket{
+		test,
+		[]byte{},
+	}
+	return &s
+}
+
 // sender is a test in sender mode
 type sender struct {
 	test     *MessageTest
