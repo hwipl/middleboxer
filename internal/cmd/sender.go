@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 )
 
 // senderPacket is a test packet sent by the sender
@@ -18,6 +19,40 @@ func (s *senderPacket) bytes() []byte {
 	return s.b
 }
 
+// createPacketEthernet creates the ethernet header of the packet
+func (s *senderPacket) createPacketEthernet() {
+	eth := layers.Ethernet{
+		SrcMAC: s.test.SrcMAC,
+		DstMAC: s.test.DstMAC,
+	}
+
+	if s.test.SrcIP.To4() != nil {
+		eth.EthernetType = layers.EthernetTypeIPv4
+	} else {
+		eth.EthernetType = layers.EthernetTypeIPv6
+	}
+
+	s.layers = append(s.layers, &eth)
+}
+
+// createPacket creates the packet to send
+func (s *senderPacket) createPacket() {
+	// create packet layers
+	s.createPacketEthernet()
+
+	// serialize packet to bytes
+	opts := gopacket.SerializeOptions{
+		FixLengths:       true,
+		ComputeChecksums: true,
+	}
+	buf := gopacket.NewSerializeBuffer()
+	err := gopacket.SerializeLayers(buf, opts, s.layers...)
+	if err != nil {
+		log.Fatal(err)
+	}
+	s.b = buf.Bytes()
+}
+
 // newSenderPacket creates a new packet to send
 func newSenderPacket(test *MessageTest) *senderPacket {
 	s := senderPacket{
@@ -25,6 +60,7 @@ func newSenderPacket(test *MessageTest) *senderPacket {
 		[]gopacket.SerializableLayer{},
 		[]byte{},
 	}
+	s.createPacket()
 	return &s
 }
 
