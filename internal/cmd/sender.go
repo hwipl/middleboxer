@@ -64,11 +64,34 @@ func (s *senderPacket) createPacketIP() {
 	}
 }
 
+// createPacketUDP creates the udp header of the packet
+func (s *senderPacket) createPacketUDP() {
+	udp := layers.UDP{
+		SrcPort: layers.UDPPort(s.test.SrcPort),
+		DstPort: layers.UDPPort(s.test.DstPort),
+	}
+	layer3 := s.layers[1].(gopacket.NetworkLayer)
+	udp.SetNetworkLayerForChecksum(layer3)
+
+	s.layers = append(s.layers, &udp)
+}
+
+// createPacketL4 creates the layer 4 header of the packet
+func (s *senderPacket) createPacketL4() {
+	switch s.test.Protocol {
+	case ProtocolUDP:
+		s.createPacketUDP()
+	case ProtocolTCP:
+		// TODO: add tcp
+	}
+}
+
 // createPacket creates the packet to send
 func (s *senderPacket) createPacket() {
 	// create packet layers
 	s.createPacketEthernet()
 	s.createPacketIP()
+	s.createPacketL4()
 
 	// serialize packet to bytes
 	opts := gopacket.SerializeOptions{
