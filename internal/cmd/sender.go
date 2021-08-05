@@ -122,6 +122,7 @@ type sender struct {
 	test     *MessageTest
 	results  chan *MessageResult
 	listener *packetListener
+	packet   []byte
 }
 
 // sendPacket sends packet
@@ -143,5 +144,6 @@ func newSender(test *MessageTest, results chan *MessageResult) *sender {
 		test,
 		results,
 		packetListeners.get(test.Device),
+		newSenderPacket(test).bytes(),
 	}
 }
