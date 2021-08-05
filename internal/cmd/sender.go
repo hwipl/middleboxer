@@ -35,10 +35,40 @@ func (s *senderPacket) createPacketEthernet() {
 	s.layers = append(s.layers, &eth)
 }
 
+// createPacketIPv4 creates the ipv4 header of the packet
+func (s *senderPacket) createPacketIPv4() {
+	ip := layers.IPv4{
+		Version: 4,
+		Flags:   layers.IPv4DontFragment,
+		TTL:     64,
+		SrcIP:   s.test.SrcIP,
+		DstIP:   s.test.DstIP,
+	}
+
+	switch s.test.Protocol {
+	case ProtocolUDP:
+		ip.Protocol = layers.IPProtocolUDP
+	case ProtocolTCP:
+		ip.Protocol = layers.IPProtocolTCP
+	}
+
+	s.layers = append(s.layers, &ip)
+}
+
+// createPacketIP creates the ip header of the packet
+func (s *senderPacket) createPacketIP() {
+	if s.test.SrcIP.To4() != nil {
+		s.createPacketIPv4()
+	} else {
+		// TODO: add ipv6
+	}
+}
+
 // createPacket creates the packet to send
 func (s *senderPacket) createPacket() {
 	// create packet layers
 	s.createPacketEthernet()
+	s.createPacketIP()
 
 	// serialize packet to bytes
 	opts := gopacket.SerializeOptions{
