@@ -126,8 +126,8 @@ type sender struct {
 }
 
 // sendPacket sends packet
-func (s *sender) sendPacket(packet []byte) {
-	if err := s.listener.send(packet); err != nil {
+func (s *sender) sendPacket() {
+	if err := s.listener.send(s.packet); err != nil {
 		s.results <- &MessageResult{s.test.ID, ResultError}
 		log.Println(err)
 	}
