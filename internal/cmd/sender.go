@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"log"
+	"time"
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
@@ -210,7 +211,18 @@ func (s *sender) sendPacket() {
 
 // run runs the sender
 func (s *sender) run() {
-	// TODO: do something
+	// register handler to receive icmp error messages
+	s.listener.register(s)
+
+	// send test packet three times
+	for i := 0; i < 3; i++ {
+		s.sendPacket()
+		time.Sleep(time.Millisecond)
+	}
+
+	// wait a second for icmp errors and stop
+	time.Sleep(time.Second)
+	s.listener.deregister(s)
 }
 
 // newSender creates a new test in sender mode
