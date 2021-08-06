@@ -158,6 +158,29 @@ type sender struct {
 	packet   []byte
 }
 
+// handleICMPv4 handles ICMPv4 destination unreachable messages
+func (s *sender) handleICMPv4(packet gopacket.Packet) {
+	// handle icmp messages only
+	icmpv4Layer := packet.Layer(layers.LayerTypeICMPv4)
+	if icmpv4Layer == nil {
+		return
+	}
+	icmpv4, _ := icmpv4Layer.(*layers.ICMPv4)
+
+	// handle destination unreachable messages only
+	if icmpv4.TypeCode.Type() != layers.ICMPv4TypeDestinationUnreachable {
+		return
+	}
+
+	// TODO: check ICMP codes? check sender ip address? return result?
+	log.Printf("%v", icmpv4)
+}
+
+// HandlePacket handles a packet received via the listener
+func (s *sender) HandlePacket(packet gopacket.Packet) {
+	s.handleICMPv4(packet)
+}
+
 // sendPacket sends packet
 func (s *sender) sendPacket() {
 	if err := s.listener.send(s.packet); err != nil {
