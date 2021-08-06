@@ -176,9 +176,28 @@ func (s *sender) handleICMPv4(packet gopacket.Packet) {
 	log.Printf("%v", icmpv4)
 }
 
+// handleICMPv6 handles ICMPv6 destination unreachable messages
+func (s *sender) handleICMPv6(packet gopacket.Packet) {
+	// handle icmp messages only
+	icmpv6Layer := packet.Layer(layers.LayerTypeICMPv6)
+	if icmpv6Layer == nil {
+		return
+	}
+	icmpv6, _ := icmpv6Layer.(*layers.ICMPv6)
+
+	// handle destination unreachable messages only
+	if icmpv6.TypeCode.Type() != layers.ICMPv6TypeDestinationUnreachable {
+		return
+	}
+
+	// TODO: check ICMP codes? check sender ip address? return result?
+	log.Printf("%v", icmpv6)
+}
+
 // HandlePacket handles a packet received via the listener
 func (s *sender) HandlePacket(packet gopacket.Packet) {
 	s.handleICMPv4(packet)
+	s.handleICMPv6(packet)
 }
 
 // sendPacket sends packet
