@@ -55,12 +55,31 @@ func (s *senderPacket) createPacketIPv4() {
 	s.layers = append(s.layers, &ip)
 }
 
+// createPacketIPv6 creates the ipv header of the packet
+func (s *senderPacket) createPacketIPv6() {
+	ip := layers.IPv6{
+		Version:  6,
+		HopLimit: 64,
+		SrcIP:    s.test.SrcIP,
+		DstIP:    s.test.DstIP,
+	}
+
+	switch s.test.Protocol {
+	case ProtocolUDP:
+		ip.NextHeader = layers.IPProtocolUDP
+	case ProtocolTCP:
+		ip.NextHeader = layers.IPProtocolTCP
+	}
+
+	s.layers = append(s.layers, &ip)
+}
+
 // createPacketIP creates the ip header of the packet
 func (s *senderPacket) createPacketIP() {
 	if s.test.SrcIP.To4() != nil {
 		s.createPacketIPv4()
 	} else {
-		// TODO: add ipv6
+		s.createPacketIPv6()
 	}
 }
 
