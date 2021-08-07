@@ -3,6 +3,7 @@ package cmd
 import (
 	"bytes"
 	"net"
+	"time"
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
@@ -201,6 +202,11 @@ func (r *receiver) run() {
 		r.test.ID,
 		ResultReady,
 	}
+
+	// wait two seconds and stop in case we do not get the packet
+	// from the sender
+	time.Sleep(2 * time.Second)
+	packetListeners.get(r.test.Device).deregister(r)
 }
 
 // newReceiver creates a new test in receiver mode
