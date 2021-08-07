@@ -61,7 +61,7 @@ func (c *client) receive() {
 // runTest runs the test requested by the server in the test message
 func (c *client) runTest(test *MessageTest) {
 	if test.Initiate {
-		// TODO: do something
+		newSender(test, c.results).run()
 	} else {
 		newReceiver(test, c.results).run()
 	}
