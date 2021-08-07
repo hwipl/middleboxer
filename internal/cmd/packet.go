@@ -16,7 +16,7 @@ type packetListenerMap struct {
 }
 
 // get returns the packet listener listening on device
-func (p packetListenerMap) get(device string) *packetListener {
+func (p *packetListenerMap) get(device string) *packetListener {
 	if l := p.listeners[device]; l != nil {
 		return l
 	}
