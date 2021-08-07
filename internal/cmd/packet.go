@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"sync"
+
 	"github.com/google/gopacket"
 	"github.com/hwipl/packet-go/pkg/pcap"
 )
@@ -12,11 +14,15 @@ var (
 
 // packetListenerMap is a collection of packet listeners
 type packetListenerMap struct {
+	sync.Mutex
 	listeners map[string]*packetListener
 }
 
 // get returns the packet listener listening on device
 func (p *packetListenerMap) get(device string) *packetListener {
+	p.Lock()
+	defer p.Unlock()
+
 	if l := p.listeners[device]; l != nil {
 		return l
 	}
@@ -28,7 +34,7 @@ func (p *packetListenerMap) get(device string) *packetListener {
 // newPacketListenerMap creates a packet listener map
 func newPacketListenerMap() *packetListenerMap {
 	return &packetListenerMap{
-		make(map[string]*packetListener),
+		listeners: make(map[string]*packetListener),
 	}
 }
 
