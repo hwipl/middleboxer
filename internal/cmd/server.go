@@ -16,14 +16,17 @@ type clientHandler struct {
 	conn       net.Conn
 	id         uint8
 	clientRegs chan *clientHandler
+	results    chan *clientResult
 }
 
 // newClientHandler creates a new client handler with conn
-func newClientHandler(conn net.Conn, clientRegs chan *clientHandler) *clientHandler {
+func newClientHandler(conn net.Conn, clientRegs chan *clientHandler,
+	results chan *clientResult) *clientHandler {
 	return &clientHandler{
 		conn,
 		0,
 		clientRegs,
+		results,
 	}
 }
 
@@ -70,6 +73,13 @@ func (c *clientHandler) run() {
 		// handle message based on type
 		switch msg.GetType() {
 		case MessageTypeNop:
+		case MessageTypeResult:
+			// handle result message from client
+			m, ok := msg.(*MessageResult)
+			if !ok {
+				break
+			}
+			c.results <- &clientResult{c.id, m}
 		default:
 			// invalid client message; disconnect client
 			log.Println("Invalid message from client",
@@ -99,7 +109,7 @@ func (s *server) listen() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		go newClientHandler(client, s.clientRegs).run()
+		go newClientHandler(client, s.clientRegs, s.results).run()
 	}
 }
 
