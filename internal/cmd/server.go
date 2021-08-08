@@ -5,6 +5,12 @@ import (
 	"net"
 )
 
+// clientResult is a result sent by a client
+type clientResult struct {
+	clientID uint8
+	result   *MessageResult
+}
+
 // clientHandler handles a client connected to the server
 type clientHandler struct {
 	conn       net.Conn
