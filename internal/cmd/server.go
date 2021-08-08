@@ -84,6 +84,7 @@ type server struct {
 	listener   net.Listener
 	clientRegs chan *clientHandler
 	clients    map[uint8]*clientHandler
+	results    chan *clientResult
 }
 
 // listen waits for new connections from clients
@@ -110,6 +111,10 @@ func (s *server) run() {
 		select {
 		case c := <-s.clientRegs:
 			s.clients[c.id] = c
+		case r := <-s.results:
+			// TODO: handle result
+			log.Printf("Received result %v from client %d",
+				r.result, r.clientID)
 		}
 	}
 }
@@ -127,5 +132,6 @@ func newServer(address string) *server {
 		listener,
 		make(chan *clientHandler),
 		make(map[uint8]*clientHandler),
+		make(chan *clientResult),
 	}
 }
