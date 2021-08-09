@@ -9,6 +9,15 @@ type planItem struct {
 	receiverResults []*MessageResult
 }
 
+// newPlanItem creates a new planItem
+func newPlanItem(id uint32, senderMsg, receiverMsg *MessageTest) *planItem {
+	return &planItem{
+		id:          id,
+		senderMsg:   senderMsg,
+		receiverMsg: receiverMsg,
+	}
+}
+
 // plan is a test execution plan
 type plan struct {
 	senderIDs   []uint8
