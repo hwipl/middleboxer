@@ -24,3 +24,13 @@ type plan struct {
 	receiverIDs []uint8
 	items       map[uint32]*planItem
 }
+
+// newPlan creates a new plan
+func newPlan(senderIDs, receiverIDs []uint8) *plan {
+	items := make(map[uint32]*planItem)
+	return &plan{
+		senderIDs,
+		receiverIDs,
+		items,
+	}
+}
