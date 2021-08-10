@@ -98,6 +98,26 @@ func (p *plan) handleClient(clientID uint8) {
 	p.clients = append(p.clients, clientID)
 }
 
+// clientsActive checks if all clients are active
+func (p *plan) clientsActive() bool {
+	// check if all senders are present
+	for _, i := range p.senderIDs {
+		if !listContainsID(p.clients, i) {
+			return false
+		}
+	}
+
+	// check if all receivers are present
+	for _, i := range p.receiverIDs {
+		if !listContainsID(p.clients, i) {
+			return false
+		}
+	}
+
+	// senders and receivers are present
+	return true
+}
+
 // newPlan creates a new plan
 func newPlan(senderIDs, receiverIDs []uint8) *plan {
 	items := make(map[uint32]*planItem)
