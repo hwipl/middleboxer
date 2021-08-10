@@ -25,6 +25,16 @@ type plan struct {
 	items       map[uint32]*planItem
 }
 
+// listContainsID checks if list contains id
+func listContainsID(list []uint8, id uint8) bool {
+	for _, i := range list {
+		if i == id {
+			return true
+		}
+	}
+	return false
+}
+
 // newPlan creates a new plan
 func newPlan(senderIDs, receiverIDs []uint8) *plan {
 	items := make(map[uint32]*planItem)
