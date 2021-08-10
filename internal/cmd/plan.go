@@ -80,6 +80,24 @@ func (p *plan) handleResult(clientID uint8, result *MessageResult) {
 	}
 }
 
+// handleClient handles a new client
+func (p *plan) handleClient(clientID uint8) {
+	// check if client is valid
+	if !listContainsID(p.senderIDs, clientID) {
+		if !listContainsID(p.receiverIDs, clientID) {
+			log.Println("Invalid client")
+			return
+		}
+	}
+
+	// add client to active clients
+	if listContainsID(p.clients, clientID) {
+		log.Println("Client already active")
+		return
+	}
+	p.clients = append(p.clients, clientID)
+}
+
 // newPlan creates a new plan
 func newPlan(senderIDs, receiverIDs []uint8) *plan {
 	items := make(map[uint32]*planItem)
