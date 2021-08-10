@@ -25,6 +25,7 @@ type plan struct {
 	senderIDs   []uint8
 	receiverIDs []uint8
 	items       map[uint32]*planItem
+	clients     []uint8
 }
 
 // listContainsID checks if list contains id
@@ -83,8 +84,8 @@ func (p *plan) handleResult(clientID uint8, result *MessageResult) {
 func newPlan(senderIDs, receiverIDs []uint8) *plan {
 	items := make(map[uint32]*planItem)
 	return &plan{
-		senderIDs,
-		receiverIDs,
-		items,
+		senderIDs:   senderIDs,
+		receiverIDs: receiverIDs,
+		items:       items,
 	}
 }
