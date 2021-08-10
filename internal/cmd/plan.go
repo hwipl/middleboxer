@@ -1,5 +1,7 @@
 package cmd
 
+import "log"
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	id              uint32
@@ -49,6 +51,32 @@ func (p *plan) isReceiver(clientID uint8) bool {
 		return true
 	}
 	return false
+}
+
+// handleResult handles result coming from clientID
+func (p *plan) handleResult(clientID uint8, result *MessageResult) {
+	// check if client is a sender or receiver
+	isSender := p.isSender(clientID)
+	if !isSender {
+		if !p.isReceiver(clientID) {
+			log.Println("Received result from invalid client")
+			return
+		}
+	}
+
+	// get plan item
+	item := p.items[result.ID]
+	if item == nil {
+		log.Println("Received result with invalid ID")
+		return
+	}
+
+	// add result to result list
+	if isSender {
+		item.senderResults = append(item.senderResults, result)
+	} else {
+		item.receiverResults = append(item.receiverResults, result)
+	}
 }
 
 // newPlan creates a new plan
