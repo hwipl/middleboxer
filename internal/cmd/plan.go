@@ -43,6 +43,14 @@ func (p *plan) isSender(clientID uint8) bool {
 	return false
 }
 
+// isReceiver checks if clientID is in the receivers list
+func (p *plan) isReceiver(clientID uint8) bool {
+	if listContainsID(p.receiverIDs, clientID) {
+		return true
+	}
+	return false
+}
+
 // newPlan creates a new plan
 func newPlan(senderIDs, receiverIDs []uint8) *plan {
 	items := make(map[uint32]*planItem)
