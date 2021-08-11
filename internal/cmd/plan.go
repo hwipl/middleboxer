@@ -23,7 +23,7 @@ func newPlanItem(id uint32, senderMsg, receiverMsg *MessageTest) *planItem {
 
 // plan is a test execution plan
 type plan struct {
-	senderIDs   []uint8
+	senderID    uint8
 	receiverIDs []uint8
 	items       map[uint32]*planItem
 	clients     []uint8
@@ -41,7 +41,7 @@ func listContainsID(list []uint8, id uint8) bool {
 
 // isSender checks if clientID is in the senders list
 func (p *plan) isSender(clientID uint8) bool {
-	if listContainsID(p.senderIDs, clientID) {
+	if p.senderID == clientID {
 		return true
 	}
 	return false
@@ -95,7 +95,7 @@ func (p *plan) handleResult(clientID uint8, result *MessageResult) {
 // handleClient handles a new client
 func (p *plan) handleClient(clientID uint8) {
 	// check if client is valid
-	if !listContainsID(p.senderIDs, clientID) {
+	if p.senderID != clientID {
 		if !listContainsID(p.receiverIDs, clientID) {
 			log.Println("Invalid client")
 			return
@@ -113,10 +113,8 @@ func (p *plan) handleClient(clientID uint8) {
 // clientsActive checks if all clients are active
 func (p *plan) clientsActive() bool {
 	// check if all senders are present
-	for _, i := range p.senderIDs {
-		if !listContainsID(p.clients, i) {
-			return false
-		}
+	if !listContainsID(p.clients, p.senderID) {
+		return false
 	}
 
 	// check if all receivers are present
@@ -131,10 +129,10 @@ func (p *plan) clientsActive() bool {
 }
 
 // newPlan creates a new plan
-func newPlan(senderIDs, receiverIDs []uint8) *plan {
+func newPlan(senderID uint8, receiverIDs []uint8) *plan {
 	items := make(map[uint32]*planItem)
 	return &plan{
-		senderIDs:   senderIDs,
+		senderID:    senderID,
 		receiverIDs: receiverIDs,
 		items:       items,
 	}
