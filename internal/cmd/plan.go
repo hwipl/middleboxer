@@ -7,6 +7,7 @@ type planItem struct {
 	id              uint32
 	senderMsg       *MessageTest
 	receiverMsg     *MessageTest
+	receiversReady  []uint8
 	senderResults   []*MessageResult
 	receiverResults []*MessageResult
 }
@@ -76,6 +77,17 @@ func (p *plan) handleResult(clientID uint8, result *MessageResult) {
 	if isSender {
 		item.senderResults = append(item.senderResults, result)
 	} else {
+		if result.Result == ResultReady {
+			// handle "ready" results
+			if listContainsID(item.receiversReady, clientID) {
+				log.Println("Double ready from client", clientID)
+				return
+			}
+			item.receiversReady = append(item.receiversReady, clientID)
+			return
+		}
+
+		// handle other results
 		item.receiverResults = append(item.receiverResults, result)
 	}
 }
