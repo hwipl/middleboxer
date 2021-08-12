@@ -23,10 +23,11 @@ func newPlanItem(id uint32, senderMsg, receiverMsg *MessageTest) *planItem {
 
 // plan is a test execution plan
 type plan struct {
-	senderID   uint8
-	receiverID uint8
-	items      map[uint32]*planItem
-	clients    []uint8
+	senderID       uint8
+	receiverID     uint8
+	items          map[uint32]*planItem
+	senderActive   bool
+	receiverActive bool
 }
 
 // listContainsID checks if list contains id
@@ -94,36 +95,34 @@ func (p *plan) handleResult(clientID uint8, result *MessageResult) {
 
 // handleClient handles a new client
 func (p *plan) handleClient(clientID uint8) {
-	// check if client is valid
-	if p.senderID != clientID {
-		if p.receiverID != clientID {
-			log.Println("Invalid client")
-			return
+	// is client the sender?
+	if clientID == p.senderID {
+		if p.senderActive {
+			log.Println("Sender client already active")
 		}
-	}
-
-	// add client to active clients
-	if listContainsID(p.clients, clientID) {
-		log.Println("Client already active")
+		p.senderActive = true
 		return
 	}
-	p.clients = append(p.clients, clientID)
+
+	// is client the receiver?
+	if clientID == p.receiverID {
+		if p.receiverActive {
+			log.Println("Receiver client already active")
+		}
+		p.receiverActive = true
+		return
+	}
+
+	// invalid client
+	log.Println("Invalid client")
 }
 
 // clientsActive checks if all clients are active
 func (p *plan) clientsActive() bool {
-	// check if all senders are present
-	if !listContainsID(p.clients, p.senderID) {
-		return false
+	if p.senderActive && p.receiverActive {
+		return true
 	}
-
-	// check if all receivers are present
-	if !listContainsID(p.clients, p.receiverID) {
-		return false
-	}
-
-	// senders and receivers are present
-	return true
+	return false
 }
 
 // newPlan creates a new plan
