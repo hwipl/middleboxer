@@ -30,16 +30,6 @@ type plan struct {
 	receiverActive bool
 }
 
-// listContainsID checks if list contains id
-func listContainsID(list []uint8, id uint8) bool {
-	for _, i := range list {
-		if i == id {
-			return true
-		}
-	}
-	return false
-}
-
 // isSender checks if clientID is in the senders list
 func (p *plan) isSender(clientID uint8) bool {
 	if p.senderID == clientID {
