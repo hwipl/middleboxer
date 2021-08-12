@@ -26,6 +26,7 @@ type plan struct {
 	senderID       uint8
 	receiverID     uint8
 	items          map[uint32]*planItem
+	currentItem    uint32
 	senderActive   bool
 	receiverActive bool
 }
