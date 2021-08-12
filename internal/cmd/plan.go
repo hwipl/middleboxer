@@ -116,6 +116,12 @@ func (p *plan) clientsActive() bool {
 	return false
 }
 
+// getNextItem returns the next plan item
+func (p *plan) getNextItem() *planItem {
+	p.currentItem += 1
+	return p.items[p.currentItem]
+}
+
 // newPlan creates a new plan
 func newPlan(senderID, receiverID uint8) *plan {
 	items := make(map[uint32]*planItem)
