@@ -125,6 +125,25 @@ func (s *server) run() {
 
 			// handle client in plan
 			s.plan.handleClient(c.id)
+
+			// if all clients are active, get first item in the
+			// plan and inform receiver
+			if s.plan.clientsActive() {
+				// get first item
+				item := s.plan.getCurrentItem()
+				if item == nil {
+					log.Println("No items in plan")
+					break
+				}
+
+				// inform receiver
+				msg := item.receiverMsg
+				receiver := s.clients[s.plan.receiverID]
+				if !writeMessage(receiver.conn, msg) {
+					log.Println("Error sending to receiver client")
+					break
+				}
+			}
 		case r := <-s.results:
 			log.Printf("Received result %v from client %d",
 				r.result, r.clientID)
