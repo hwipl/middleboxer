@@ -131,6 +131,38 @@ func (s *server) run() {
 
 			// handle result in plan
 			s.plan.handleResult(r.clientID, r.result)
+
+			// if there is no (more) item in the plan, stop here
+			item := s.plan.getCurrentItem()
+			if item == nil {
+				continue
+			}
+
+			// if receiver is ready, inform sender and
+			// move on to next item in the plan
+			if r.result.Result == ResultReady && item.receiverReady {
+				// inform sender
+				msg := item.senderMsg
+				sender := s.clients[s.plan.senderID]
+				if !writeMessage(sender.conn, msg) {
+					log.Println("Error sending to sender client")
+					break
+				}
+
+				// go to next plan item
+				item = s.plan.getNextItem()
+				if item == nil {
+					log.Println("No more items in plan")
+					continue
+				}
+				msg = item.receiverMsg
+				receiver := s.clients[s.plan.receiverID]
+				if !writeMessage(receiver.conn, msg) {
+					log.Println("Error sending to receiver client")
+					break
+				}
+
+			}
 		}
 	}
 }
