@@ -42,7 +42,9 @@ func Run() {
 
 	// run as server?
 	if serverMode {
-		newServer(serverAddress).run()
+		// TODO: get sender and receiver ID from command line
+		plan := newPlan(0, 1)
+		newServer(serverAddress, plan).run()
 		return
 	}
 

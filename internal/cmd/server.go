@@ -92,6 +92,7 @@ func (c *clientHandler) run() {
 // server stores information about a server
 type server struct {
 	listener   net.Listener
+	plan       *plan
 	clientRegs chan *clientHandler
 	clients    map[uint8]*clientHandler
 	results    chan *clientResult
@@ -130,7 +131,7 @@ func (s *server) run() {
 }
 
 // newServer creates an new server that listens on address
-func newServer(address string) *server {
+func newServer(address string, plan *plan) *server {
 	// create listener
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
@@ -140,6 +141,7 @@ func newServer(address string) *server {
 	// return server
 	return &server{
 		listener,
+		plan,
 		make(chan *clientHandler),
 		make(map[uint8]*clientHandler),
 		make(chan *clientResult),
