@@ -122,6 +122,9 @@ func (s *server) run() {
 		select {
 		case c := <-s.clientRegs:
 			s.clients[c.id] = c
+
+			// handle client in plan
+			s.plan.handleClient(c.id)
 		case r := <-s.results:
 			// TODO: handle result
 			log.Printf("Received result %v from client %d",
