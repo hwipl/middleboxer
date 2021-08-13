@@ -126,9 +126,11 @@ func (s *server) run() {
 			// handle client in plan
 			s.plan.handleClient(c.id)
 		case r := <-s.results:
-			// TODO: handle result
 			log.Printf("Received result %v from client %d",
 				r.result, r.clientID)
+
+			// handle result in plan
+			s.plan.handleResult(r.clientID, r.result)
 		}
 	}
 }
