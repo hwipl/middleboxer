@@ -116,6 +116,11 @@ func (p *plan) clientsActive() bool {
 	return false
 }
 
+// getCurrentItem returns the current plan item
+func (p *plan) getCurrentItem() *planItem {
+	return p.items[p.currentItem]
+}
+
 // getNextItem returns the next plan item
 func (p *plan) getNextItem() *planItem {
 	p.currentItem += 1
