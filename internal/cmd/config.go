@@ -31,8 +31,8 @@ func (c *Config) ParseCommandLine() {
 		"run as server (default: run as client)")
 	flag.StringVar(&c.ServerAddress, "address", c.ServerAddress,
 		"set address to connect to (client mode) or listen on (server mode)")
-	cid := flag.Uint("id", 0, "set id of the client")
-	sid := flag.Uint("sid", 0, "set id of the sending client")
+	cid := flag.Uint("id", uint(c.ClientID), "set id of the client")
+	sid := flag.Uint("sid", uint(c.SenderID), "set id of the sending client")
 	rid := flag.Uint("rid", uint(c.ReceiverID), "set id of the receiving client")
 
 	// parse command line arguments
@@ -52,6 +52,8 @@ func (c *Config) ParseCommandLine() {
 // NewConfig creates a new Config
 func NewConfig() *Config {
 	return &Config{
-		ReceiverID: 1,
+		ClientID:   1,
+		SenderID:   1,
+		ReceiverID: 2,
 	}
 }
