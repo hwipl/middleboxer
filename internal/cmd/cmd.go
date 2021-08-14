@@ -8,8 +8,8 @@ func Run() {
 
 	// run as server?
 	if config.ServerMode {
-		// TODO: get sender and receiver ID from command line
-		plan := newPlan(0, 1)
+		// TODO: get receiver ID from command line
+		plan := newPlan(config.SenderID, 1)
 		newServer(config.ServerAddress, plan).run()
 		return
 	}
