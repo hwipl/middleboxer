@@ -8,7 +8,7 @@ func Run() {
 
 	// run as server?
 	if config.ServerMode {
-		plan := newPlan(config.SenderID, config.ReceiverID)
+		plan := newPlan(config)
 		newServer(config.ServerAddress, plan).run()
 		return
 	}

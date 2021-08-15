@@ -128,11 +128,11 @@ func (p *plan) getNextItem() *planItem {
 }
 
 // newPlan creates a new plan
-func newPlan(senderID, receiverID uint8) *plan {
+func newPlan(config *Config) *plan {
 	items := make(map[uint32]*planItem)
 	return &plan{
-		senderID:   senderID,
-		receiverID: receiverID,
+		senderID:   config.SenderID,
+		receiverID: config.ReceiverID,
 		items:      items,
 	}
 }
