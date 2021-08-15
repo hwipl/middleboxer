@@ -22,6 +22,9 @@ type Config struct {
 
 	// ReceiverID is the id of the receiving client
 	ReceiverID uint8
+
+	// SenderDevice is the name of the sender's network interface
+	SenderDevice string
 }
 
 // ParseCommandLine fills the config from command line arguments
