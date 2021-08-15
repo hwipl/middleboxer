@@ -58,6 +58,9 @@ type Config struct {
 
 	// SenderSrcPort is the sender's source port
 	SenderSrcPort uint16
+
+	// PortRange is the tested port range
+	PortRange string
 }
 
 // ParseCommandLine fills the config from command line arguments
