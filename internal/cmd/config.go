@@ -40,6 +40,9 @@ type Config struct {
 
 	// ReceiverDstMAC is the receiver's destination MAC address
 	ReceiverDstMAC string
+
+	// SenderSrcIP is the sender's source IP address
+	SenderSrcIP string
 }
 
 // ParseCommandLine fills the config from command line arguments
