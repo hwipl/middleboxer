@@ -46,6 +46,9 @@ type Config struct {
 
 	// SenderDstIP is the sender's destination IP address
 	SenderDstIP string
+
+	// ReceiverSrcIP is the receiver's source IP address
+	ReceiverSrcIP string
 }
 
 // ParseCommandLine fills the config from command line arguments
