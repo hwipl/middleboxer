@@ -55,6 +55,9 @@ type Config struct {
 
 	// Protocol is the layer 4 protocol
 	Protocol uint16
+
+	// SenderSrcPort is the sender's source port
+	SenderSrcPort uint16
 }
 
 // ParseCommandLine fills the config from command line arguments
