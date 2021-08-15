@@ -28,6 +28,9 @@ type Config struct {
 
 	// ReceiverDevice is the name of the receiver's network interface
 	ReceiverDevice string
+
+	// SenderSrcMAC is the sender's source MAC address
+	SenderSrcMAC string
 }
 
 // ParseCommandLine fills the config from command line arguments
