@@ -52,6 +52,9 @@ type Config struct {
 
 	// ReceiverDstIP is the receiver's destination IP address
 	ReceiverDstIP string
+
+	// Protocol is the layer 4 protocol
+	Protocol uint16
 }
 
 // ParseCommandLine fills the config from command line arguments
