@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"math"
+	"net"
 )
 
 // Config contains the configuration
@@ -61,6 +62,20 @@ type Config struct {
 
 	// PortRange is the tested port range
 	PortRange string
+}
+
+// getMACFromString converts a string to a hardware (MAC) address
+func getMACFromString(mac string) net.HardwareAddr {
+	m, err := net.ParseMAC(mac)
+	if err != nil {
+		return nil
+	}
+	return m
+}
+
+// GetSenderSrcMAC returns the sender's source MAC address
+func (c *Config) GetSenderSrcMAC() net.HardwareAddr {
+	return getMACFromString(c.SenderSrcMAC)
 }
 
 // ParseCommandLine fills the config from command line arguments
