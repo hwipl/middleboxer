@@ -103,6 +103,11 @@ func (c *Config) GetSenderSrcIP() net.IP {
 	return getIPFromString(c.SenderSrcIP)
 }
 
+// GetSenderDstIP returns the sender's destination IP address
+func (c *Config) GetSenderDstIP() net.IP {
+	return getIPFromString(c.SenderDstIP)
+}
+
 // ParseCommandLine fills the config from command line arguments
 func (c *Config) ParseCommandLine() {
 	// configure command line arguments
