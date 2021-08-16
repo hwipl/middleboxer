@@ -83,6 +83,11 @@ func (c *Config) GetSenderDstMAC() net.HardwareAddr {
 	return getMACFromString(c.SenderDstMAC)
 }
 
+// GetReceiverSrcMAC returns the receiver's source MAC address
+func (c *Config) GetReceiverSrcMAC() net.HardwareAddr {
+	return getMACFromString(c.ReceiverSrcMAC)
+}
+
 // ParseCommandLine fills the config from command line arguments
 func (c *Config) ParseCommandLine() {
 	// configure command line arguments
