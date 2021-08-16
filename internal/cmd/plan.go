@@ -127,6 +127,22 @@ func (p *plan) getNextItem() *planItem {
 	return p.items[p.currentItem]
 }
 
+// newSenderMessage creates a new sender message for a plan
+func newSenderMessage(id uint32, port uint16, config *Config) *MessageTest {
+	return &MessageTest{
+		ID:       id,
+		Initiate: true,
+		Device:   config.SenderDevice,
+		SrcMAC:   config.GetSenderSrcMAC(),
+		DstMAC:   config.GetSenderDstMAC(),
+		SrcIP:    config.GetSenderSrcIP(),
+		DstIP:    config.GetSenderDstIP(),
+		Protocol: config.Protocol,
+		SrcPort:  config.SenderSrcPort,
+		DstPort:  port,
+	}
+}
+
 // newPlan creates a new plan
 func newPlan(config *Config) *plan {
 	items := make(map[uint32]*planItem)
