@@ -161,7 +161,20 @@ func newReceiverMessage(id uint32, port uint16, config *Config) *MessageTest {
 
 // newPlan creates a new plan
 func newPlan(config *Config) *plan {
+	// initialize plan
 	items := make(map[uint32]*planItem)
+
+	// fill plan with plan items
+	id := uint32(0)
+	first, last := config.GetPortRange()
+	for i := first; i <= last; i++ {
+		senderMsg := newSenderMessage(id, i, config)
+		receiverMsg := newReceiverMessage(id, i, config)
+		item := newPlanItem(id, senderMsg, receiverMsg)
+		items[id] = item
+		id++
+	}
+
 	return &plan{
 		senderID:   config.SenderID,
 		receiverID: config.ReceiverID,
