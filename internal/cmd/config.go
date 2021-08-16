@@ -93,6 +93,16 @@ func (c *Config) GetReceiverDstMAC() net.HardwareAddr {
 	return getMACFromString(c.ReceiverDstMAC)
 }
 
+// getIPFromString converts a string to an IP address
+func getIPFromString(ip string) net.IP {
+	return net.ParseIP(ip)
+}
+
+// GetSenderSrcIP returns the sender's source IP address
+func (c *Config) GetSenderSrcIP() net.IP {
+	return getIPFromString(c.SenderSrcIP)
+}
+
 // ParseCommandLine fills the config from command line arguments
 func (c *Config) ParseCommandLine() {
 	// configure command line arguments
