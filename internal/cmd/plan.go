@@ -143,6 +143,22 @@ func newSenderMessage(id uint32, port uint16, config *Config) *MessageTest {
 	}
 }
 
+// newReceiverMessage creates a new receiver message for a plan
+func newReceiverMessage(id uint32, port uint16, config *Config) *MessageTest {
+	return &MessageTest{
+		ID:       id,
+		Initiate: false,
+		Device:   config.ReceiverDevice,
+		SrcMAC:   config.GetReceiverSrcMAC(),
+		DstMAC:   config.GetReceiverDstMAC(),
+		SrcIP:    config.GetReceiverSrcIP(),
+		DstIP:    config.GetReceiverDstIP(),
+		Protocol: config.Protocol,
+		SrcPort:  config.SenderSrcPort,
+		DstPort:  port,
+	}
+}
+
 // newPlan creates a new plan
 func newPlan(config *Config) *plan {
 	items := make(map[uint32]*planItem)
