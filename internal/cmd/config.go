@@ -5,6 +5,8 @@ import (
 	"log"
 	"math"
 	"net"
+	"strconv"
+	"strings"
 )
 
 // Config contains the configuration
@@ -116,6 +118,40 @@ func (c *Config) GetReceiverSrcIP() net.IP {
 // GetReceiverDstIP returns the receiver's destination IP address
 func (c *Config) GetReceiverDstIP() net.IP {
 	return getIPFromString(c.ReceiverDstIP)
+}
+
+// GetPortRange returns the first and last port of the port range
+func (c *Config) GetPortRange() (first uint16, last uint16) {
+	// get first and last port as string
+	fs, ls := "", ""
+	s := strings.Split(c.PortRange, ":")
+	switch len(s) {
+	case 1:
+		fs = s[0]
+		ls = s[0]
+	case 2:
+		fs = s[0]
+		ls = s[1]
+	default:
+		return
+	}
+
+	// parse first port string
+	f, err := strconv.ParseUint(fs, 10, 16)
+	if err != nil {
+		return
+	}
+
+	// parse last port string
+	l, err := strconv.ParseUint(ls, 10, 16)
+	if err != nil {
+		return
+	}
+
+	// return first and last port
+	first = uint16(f)
+	last = uint16(l)
+	return
 }
 
 // ParseCommandLine fills the config from command line arguments
