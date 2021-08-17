@@ -164,6 +164,8 @@ func (c *Config) ParseCommandLine() {
 	cid := flag.Uint("id", uint(c.ClientID), "set id of the client")
 	sid := flag.Uint("sid", uint(c.SenderID), "set id of the sending client")
 	rid := flag.Uint("rid", uint(c.ReceiverID), "set id of the receiving client")
+	flag.StringVar(&c.SenderDevice, "sdev", c.SenderDevice,
+		"set device of the sending client")
 
 	// parse command line arguments
 	flag.Parse()
