@@ -182,6 +182,8 @@ func (c *Config) ParseCommandLine() {
 		"set destination IP of the sending client")
 	flag.StringVar(&c.ReceiverSrcIP, "rsip", c.ReceiverSrcIP,
 		"set source IP of the receiving client")
+	flag.StringVar(&c.ReceiverDstIP, "rdip", c.ReceiverDstIP,
+		"set destination IP of the receiving client")
 
 	// parse command line arguments
 	flag.Parse()
