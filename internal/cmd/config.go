@@ -188,6 +188,8 @@ func (c *Config) ParseCommandLine() {
 		"set layer 4 protocol to 6 (tcp) or 17 (udp)")
 	ssport := flag.Uint("ssport", uint(c.SenderSrcPort),
 		"set source port of the sending client")
+	flag.StringVar(&c.PortRange, "ports", c.PortRange,
+		"set port range to be tested")
 
 	// parse command line arguments
 	flag.Parse()
