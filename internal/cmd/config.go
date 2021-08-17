@@ -186,6 +186,8 @@ func (c *Config) ParseCommandLine() {
 		"set destination IP of the receiving client")
 	prot := flag.Uint("prot", uint(c.Protocol),
 		"set layer 4 protocol to 6 (tcp) or 17 (udp)")
+	ssport := flag.Uint("ssport", uint(c.SenderSrcPort),
+		"set source port of the sending client")
 
 	// parse command line arguments
 	flag.Parse()
@@ -205,6 +207,12 @@ func (c *Config) ParseCommandLine() {
 		log.Fatal("invalid protocol: ", *prot)
 	}
 	c.Protocol = uint16(*prot)
+
+	// set sender source port
+	if *ssport > math.MaxUint16 {
+		log.Fatal("invalid port: ", *ssport)
+	}
+	c.SenderSrcPort = uint16(*ssport)
 }
 
 // NewConfig creates a new Config
