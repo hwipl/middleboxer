@@ -178,6 +178,8 @@ func (c *Config) ParseCommandLine() {
 		"set destination MAC of the receiving client")
 	flag.StringVar(&c.SenderSrcIP, "ssip", c.SenderSrcIP,
 		"set source IP of the sending client")
+	flag.StringVar(&c.SenderDstIP, "sdip", c.SenderDstIP,
+		"set destination IP of the sending client")
 
 	// parse command line arguments
 	flag.Parse()
