@@ -174,6 +174,8 @@ func (c *Config) ParseCommandLine() {
 		"set destination MAC of the sending client")
 	flag.StringVar(&c.ReceiverSrcMAC, "rsmac", c.ReceiverSrcMAC,
 		"set source MAC of the receiving client")
+	flag.StringVar(&c.ReceiverDstMAC, "rdmac", c.ReceiverDstMAC,
+		"set destination MAC of the receiving client")
 
 	// parse command line arguments
 	flag.Parse()
