@@ -184,6 +184,8 @@ func (c *Config) ParseCommandLine() {
 		"set source IP of the receiving client")
 	flag.StringVar(&c.ReceiverDstIP, "rdip", c.ReceiverDstIP,
 		"set destination IP of the receiving client")
+	prot := flag.Uint("prot", uint(c.Protocol),
+		"set layer 4 protocol to 6 (tcp) or 17 (udp)")
 
 	// parse command line arguments
 	flag.Parse()
@@ -197,6 +199,12 @@ func (c *Config) ParseCommandLine() {
 	c.ClientID = uint8(*cid)
 	c.SenderID = uint8(*sid)
 	c.ReceiverID = uint8(*rid)
+
+	// set protocol
+	if *prot != ProtocolTCP && *prot != ProtocolUDP {
+		log.Fatal("invalid protocol: ", *prot)
+	}
+	c.Protocol = uint16(*prot)
 }
 
 // NewConfig creates a new Config
@@ -205,5 +213,6 @@ func NewConfig() *Config {
 		ClientID:   1,
 		SenderID:   1,
 		ReceiverID: 2,
+		Protocol:   6,
 	}
 }
