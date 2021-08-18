@@ -215,6 +215,11 @@ func (c *Config) ParseCommandLine() {
 		log.Fatal("invalid port: ", *ssport)
 	}
 	c.SenderSrcPort = uint16(*ssport)
+
+	// check port range
+	if first, last := c.GetPortRange(); first == 0 && last == 0 {
+		log.Fatal("invalid port range: ", c.PortRange)
+	}
 }
 
 // NewConfig creates a new Config
