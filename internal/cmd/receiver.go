@@ -45,7 +45,7 @@ func (r *receiver) checkIPs(src, dst net.IP) bool {
 	if r.test.SrcIP != nil && !r.test.SrcIP.Equal(src) {
 		return false
 	}
-	if r.test.DstIP != nil && !r.test.SrcIP.Equal(dst) {
+	if r.test.DstIP != nil && !r.test.DstIP.Equal(dst) {
 		return false
 	}
 
