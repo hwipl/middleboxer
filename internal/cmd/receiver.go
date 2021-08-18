@@ -188,9 +188,6 @@ func (r *receiver) HandlePacket(packet gopacket.Packet) {
 		r.test.ID,
 		ResultPass,
 	}
-
-	// deregister receiver as packet handler on device
-	packetListeners.get(r.test.Device).deregister(r)
 }
 
 // run runs the receiver
