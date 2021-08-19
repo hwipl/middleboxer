@@ -217,8 +217,10 @@ func (c *Config) ParseCommandLine() {
 	c.SenderSrcPort = uint16(*ssport)
 
 	// check port range
-	if first, last := c.GetPortRange(); first == 0 && last == 0 {
-		log.Fatal("invalid port range: ", c.PortRange)
+	if c.ServerMode {
+		if first, last := c.GetPortRange(); first == 0 && last == 0 {
+			log.Fatal("invalid port range: ", c.PortRange)
+		}
 	}
 }
 
