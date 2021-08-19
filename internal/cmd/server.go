@@ -133,7 +133,7 @@ func (s *server) run() {
 				item := s.plan.getCurrentItem()
 				if item == nil {
 					log.Println("No items in plan")
-					break
+					return
 				}
 
 				// inform receiver
@@ -141,7 +141,7 @@ func (s *server) run() {
 				receiver := s.clients[s.plan.receiverID]
 				if !writeMessage(receiver.conn, msg) {
 					log.Println("Error sending to receiver client")
-					break
+					return
 				}
 			}
 		case r := <-s.results:
@@ -165,7 +165,7 @@ func (s *server) run() {
 				sender := s.clients[s.plan.senderID]
 				if !writeMessage(sender.conn, msg) {
 					log.Println("Error sending to sender client")
-					break
+					return
 				}
 
 				// go to next plan item
@@ -178,7 +178,7 @@ func (s *server) run() {
 				receiver := s.clients[s.plan.receiverID]
 				if !writeMessage(receiver.conn, msg) {
 					log.Println("Error sending to receiver client")
-					break
+					return
 				}
 
 			}
