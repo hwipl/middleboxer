@@ -3,6 +3,7 @@ package cmd
 import (
 	"log"
 	"net"
+	"time"
 )
 
 // clientResult is a result sent by a client
@@ -118,6 +119,7 @@ func (s *server) listen() {
 func (s *server) run() {
 	go s.listen()
 
+	done := make(chan struct{})
 	for {
 		select {
 		case c := <-s.clientRegs:
@@ -172,6 +174,10 @@ func (s *server) run() {
 				item = s.plan.getNextItem()
 				if item == nil {
 					log.Println("No more items in plan")
+					go func() {
+						time.Sleep(5 * time.Second)
+						done <- struct{}{}
+					}()
 					continue
 				}
 				msg = item.receiverMsg
@@ -182,6 +188,10 @@ func (s *server) run() {
 				}
 
 			}
+		case <-done:
+			// shut down server
+			log.Println("Shutting down...")
+			return
 		}
 	}
 }
