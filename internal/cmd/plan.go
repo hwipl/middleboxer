@@ -167,7 +167,7 @@ func newPlan(config *Config) *plan {
 	// fill plan with plan items
 	id := uint32(0)
 	first, last := config.GetPortRange()
-	for i := first; i <= last; i++ {
+	for i := first; i <= last && i != 0; i++ {
 		senderMsg := newSenderMessage(id, i, config)
 		receiverMsg := newReceiverMessage(id, i, config)
 		item := newPlanItem(id, senderMsg, receiverMsg)
