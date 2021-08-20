@@ -231,5 +231,6 @@ func NewConfig() *Config {
 		SenderID:   1,
 		ReceiverID: 2,
 		Protocol:   6,
+		PortRange:  "1:65535",
 	}
 }
