@@ -107,7 +107,9 @@ func (s *senderPacket) createPacketUDP() {
 		DstPort: layers.UDPPort(s.test.DstPort),
 	}
 	layer3 := s.layers[1].(gopacket.NetworkLayer)
-	udp.SetNetworkLayerForChecksum(layer3)
+	if err := udp.SetNetworkLayerForChecksum(layer3); err != nil {
+		log.Fatal(err)
+	}
 
 	s.layers = append(s.layers, &udp)
 }
