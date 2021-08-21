@@ -93,7 +93,9 @@ func (s *senderPacket) createPacketTCP() {
 		Window:  64000,
 	}
 	layer3 := s.layers[1].(gopacket.NetworkLayer)
-	tcp.SetNetworkLayerForChecksum(layer3)
+	if err := tcp.SetNetworkLayerForChecksum(layer3); err != nil {
+		log.Fatal(err)
+	}
 
 	s.layers = append(s.layers, &tcp)
 }
