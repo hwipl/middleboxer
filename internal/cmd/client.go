@@ -38,6 +38,7 @@ func (c *client) sendResult(result *MessageResult) bool {
 
 // receive gets messages from the server
 func (c *client) receive() {
+	defer close(c.tests)
 	for {
 		// read message from server
 		msg := readMessage(c.conn)
@@ -95,7 +96,10 @@ func (c *client) run() {
 			if !c.sendNop() {
 				return
 			}
-		case test := <-c.tests:
+		case test, more := <-c.tests:
+			if !more {
+				return
+			}
 			c.runTest(test)
 		case result := <-c.results:
 			if !c.sendResult(result) {
