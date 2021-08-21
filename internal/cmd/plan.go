@@ -123,7 +123,7 @@ func (p *plan) getCurrentItem() *planItem {
 
 // getNextItem returns the next plan item
 func (p *plan) getNextItem() *planItem {
-	p.currentItem += 1
+	p.currentItem++
 	return p.items[p.currentItem]
 }
 
