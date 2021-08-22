@@ -5,6 +5,7 @@ import "log"
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	id              uint32
+	port            uint16
 	senderMsg       *MessageTest
 	receiverMsg     *MessageTest
 	receiverReady   bool
@@ -13,9 +14,10 @@ type planItem struct {
 }
 
 // newPlanItem creates a new planItem
-func newPlanItem(id uint32, senderMsg, receiverMsg *MessageTest) *planItem {
+func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
 		id:          id,
+		port:        port,
 		senderMsg:   senderMsg,
 		receiverMsg: receiverMsg,
 	}
@@ -170,7 +172,7 @@ func newPlan(config *Config) *plan {
 	for i := first; i <= last && i != 0; i++ {
 		senderMsg := newSenderMessage(id, i, config)
 		receiverMsg := newReceiverMessage(id, i, config)
-		item := newPlanItem(id, senderMsg, receiverMsg)
+		item := newPlanItem(id, i, senderMsg, receiverMsg)
 		items[id] = item
 		id++
 	}
