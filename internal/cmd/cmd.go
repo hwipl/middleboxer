@@ -10,6 +10,7 @@ func Run() {
 	if config.ServerMode {
 		plan := newPlan(config)
 		newServer(config.ServerAddress, plan).run()
+		plan.printResults()
 		return
 	}
 

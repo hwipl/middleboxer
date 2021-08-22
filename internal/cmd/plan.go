@@ -1,6 +1,9 @@
 package cmd
 
-import "log"
+import (
+	"fmt"
+	"log"
+)
 
 // planItem is a specific test in a test execution plan
 type planItem struct {
@@ -127,6 +130,28 @@ func (p *plan) getCurrentItem() *planItem {
 func (p *plan) getNextItem() *planItem {
 	p.currentItem++
 	return p.items[p.currentItem]
+}
+
+// printResults prints results of this plan to the console
+func (p *plan) printResults() {
+	i := uint32(0)
+	for {
+		item := p.items[i]
+		if item == nil {
+			return
+		}
+
+		fmt.Printf("Port %d: ", item.port)
+		for _, r := range item.senderResults {
+			fmt.Printf("S%d", r.Result)
+		}
+		for _, r := range item.receiverResults {
+			fmt.Printf("R%d", r.Result)
+		}
+		fmt.Printf("\n")
+
+		i++
+	}
 }
 
 // newSenderMessage creates a new sender message for a plan
