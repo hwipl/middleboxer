@@ -138,6 +138,10 @@ func (s *server) run() {
 					return
 				}
 
+				// inform user we are starting with the test plan
+				log.Println("Starting test plan with",
+					len(s.plan.items), "items")
+
 				// inform receiver
 				msg := item.receiverMsg
 				receiver := s.clients[s.plan.receiverID]
@@ -147,9 +151,6 @@ func (s *server) run() {
 				}
 			}
 		case r := <-s.results:
-			log.Printf("Received result %v from client %d",
-				r.result, r.clientID)
-
 			// handle result in plan
 			s.plan.handleResult(r.clientID, r.result)
 
@@ -174,6 +175,7 @@ func (s *server) run() {
 				item = s.plan.getNextItem()
 				if item == nil {
 					log.Println("No more items in plan")
+					log.Println("Collecting results for 5 seconds...")
 					go func() {
 						time.Sleep(5 * time.Second)
 						done <- struct{}{}
