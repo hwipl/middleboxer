@@ -18,6 +18,26 @@ type planResults struct {
 	results []*planResult
 }
 
+// String converts planResults to a string
+func (p *planResults) String() string {
+	s := ""
+	for _, r := range p.results {
+		if r.firstPort != r.lastPort {
+			s += fmt.Sprintf("%d:%d", r.firstPort, r.lastPort)
+		} else {
+			s += fmt.Sprintf("%d", r.firstPort)
+		}
+		if r.numPass > 0 {
+			s += fmt.Sprintf(" Pass (%d)", r.numPass)
+		}
+		if r.numOther > 0 {
+			s += fmt.Sprintf(" Other (%d)", r.numOther)
+		}
+		s += "\n"
+	}
+	return s
+}
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	id              uint32
