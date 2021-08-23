@@ -38,6 +38,26 @@ func (p *planResults) String() string {
 	return s
 }
 
+// add adds r to the collection of results; expects results added with
+// increasing port numbers, without gaps
+func (p *planResults) add(r *planResult) {
+	if p.results == nil {
+		// initialize results
+		p.results = []*planResult{r}
+		return
+	}
+
+	// check if result can be merged with last result
+	last := p.results[len(p.results)-1]
+	if last.numPass == r.numPass && last.numOther == r.numOther {
+		last.lastPort = r.lastPort
+		return
+	}
+
+	// add a new results
+	p.results = append(p.results, r)
+}
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	id              uint32
