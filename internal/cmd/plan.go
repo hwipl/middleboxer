@@ -188,23 +188,31 @@ func (p *plan) getNextItem() *planItem {
 // printResults prints results of this plan to the console
 func (p *plan) printResults() {
 	i := uint32(0)
+	results := planResults{}
 	for {
 		item := p.items[i]
 		if item == nil {
-			return
+			break
 		}
 
-		fmt.Printf("Port %d: ", item.port)
-		for _, r := range item.senderResults {
-			fmt.Printf("S%d", r.Result)
+		result := planResult{firstPort: item.port, lastPort: item.port}
+		for range item.senderResults {
+			// handle other results
+			// TODO: do this properly, check for reject messages
+			result.numOther++
 		}
 		for _, r := range item.receiverResults {
-			fmt.Printf("R%d", r.Result)
+			if r.Result == ResultPass {
+				result.numPass++
+				continue
+			}
+			result.numOther++
 		}
-		fmt.Printf("\n")
+		results.add(&result)
 
 		i++
 	}
+	log.Printf("Printing results:\n%s", &results)
 }
 
 // newSenderMessage creates a new sender message for a plan
