@@ -5,6 +5,14 @@ import (
 	"log"
 )
 
+// planResult is a result of a completed plan for printing
+type planResult struct {
+	firstPort uint16
+	lastPort  uint16
+	numPass   int
+	numOther  int
+}
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	id              uint32
