@@ -13,6 +13,11 @@ type planResult struct {
 	numOther  int
 }
 
+// planResults is a collection of results of a completed plan for printing
+type planResults struct {
+	results []*planResult
+}
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	id              uint32
