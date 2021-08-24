@@ -119,6 +119,11 @@ func (s *server) listen() {
 func (s *server) run() {
 	go s.listen()
 
+	numItems := uint32(len(s.plan.items))
+	percentItems := uint32(numItems / 100)
+	if percentItems == 0 {
+		percentItems++
+	}
 	next := make(chan struct{})
 	done := make(chan struct{})
 	for {
@@ -140,8 +145,8 @@ func (s *server) run() {
 				}
 
 				// inform user we are starting with the test plan
-				log.Println("Starting test plan with",
-					len(s.plan.items), "items")
+				log.Printf("Starting test plan with %d items",
+					numItems)
 
 				// inform receiver
 				msg := item.receiverMsg
@@ -151,6 +156,7 @@ func (s *server) run() {
 					return
 				}
 			}
+
 		case r := <-s.results:
 			// handle result in plan
 			s.plan.handleResult(r.clientID, r.result)
@@ -178,6 +184,7 @@ func (s *server) run() {
 					next <- struct{}{}
 				}()
 			}
+
 		case <-next:
 			// go to next plan item
 			item := s.plan.getNextItem()
@@ -189,6 +196,11 @@ func (s *server) run() {
 					done <- struct{}{}
 				}()
 				continue
+			}
+			if item.id%percentItems == 0 {
+				percent := float32(item.id) / float32(numItems) * 100
+				log.Printf("Reached plan item %d/%d (%.0f%%)",
+					item.id, numItems, percent)
 			}
 			msg := item.receiverMsg
 			receiver := s.clients[s.plan.receiverID]
