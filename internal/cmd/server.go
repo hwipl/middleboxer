@@ -119,6 +119,7 @@ func (s *server) listen() {
 func (s *server) run() {
 	go s.listen()
 
+	next := make(chan struct{})
 	done := make(chan struct{})
 	for {
 		select {
@@ -170,26 +171,32 @@ func (s *server) run() {
 					log.Println("Error sending to sender client")
 					return
 				}
-
-				// go to next plan item
-				item = s.plan.getNextItem()
-				if item == nil {
-					log.Println("No more items in plan")
-					log.Println("Collecting results for 5 seconds...")
-					go func() {
-						time.Sleep(5 * time.Second)
-						done <- struct{}{}
-					}()
-					continue
-				}
-				msg = item.receiverMsg
-				receiver := s.clients[s.plan.receiverID]
-				if !writeMessage(receiver.conn, msg) {
-					log.Println("Error sending to receiver client")
-					return
-				}
-
+				go func() {
+					// wait ten millisecond and trigger
+					// next plan item
+					time.Sleep(10 * time.Millisecond)
+					next <- struct{}{}
+				}()
 			}
+		case <-next:
+			// go to next plan item
+			item := s.plan.getNextItem()
+			if item == nil {
+				log.Println("No more items in plan")
+				log.Println("Collecting results for 5 seconds...")
+				go func() {
+					time.Sleep(5 * time.Second)
+					done <- struct{}{}
+				}()
+				continue
+			}
+			msg := item.receiverMsg
+			receiver := s.clients[s.plan.receiverID]
+			if !writeMessage(receiver.conn, msg) {
+				log.Println("Error sending to receiver client")
+				return
+			}
+
 		case <-done:
 			// shut down server
 			log.Println("Shutting down...")
