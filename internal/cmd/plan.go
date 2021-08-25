@@ -10,6 +10,7 @@ type planResult struct {
 	firstPort uint16
 	lastPort  uint16
 	numPass   int
+	numReset  int
 	numOther  int
 }
 
@@ -30,6 +31,9 @@ func (p *planResults) String() string {
 		if r.numPass > 0 {
 			s += fmt.Sprintf(" Pass (%d)", r.numPass)
 		}
+		if r.numReset > 0 {
+			s += fmt.Sprintf(" Reset (%d)", r.numReset)
+		}
 		if r.numOther > 0 {
 			s += fmt.Sprintf(" Other (%d)", r.numOther)
 		}
@@ -49,7 +53,9 @@ func (p *planResults) add(r *planResult) {
 
 	// check if result can be merged with last result
 	last := p.results[len(p.results)-1]
-	if last.numPass == r.numPass && last.numOther == r.numOther {
+	if last.numPass == r.numPass &&
+		last.numReset == r.numReset &&
+		last.numOther == r.numOther {
 		last.lastPort = r.lastPort
 		return
 	}
@@ -196,10 +202,15 @@ func (p *plan) printResults() {
 		}
 
 		result := planResult{firstPort: item.port, lastPort: item.port}
-		for range item.senderResults {
+		for _, r := range item.senderResults {
 			// handle other results
 			// TODO: do this properly, check for reject messages
-			result.numOther++
+			switch r.Result {
+			case ResultTCPReset:
+				result.numReset++
+			default:
+				result.numOther++
+			}
 		}
 		for _, r := range item.receiverResults {
 			if r.Result == ResultPass {
