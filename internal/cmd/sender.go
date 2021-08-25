@@ -258,7 +258,12 @@ func (s *sender) handleTCPReset(packet gopacket.Packet) {
 		tcp.DstPort != layers.TCPPort(s.test.SrcPort) {
 		return
 	}
-	// TODO: return result?
+
+	// send result back to server
+	s.results <- &MessageResult{
+		s.test.ID,
+		ResultTCPReset,
+	}
 }
 
 // HandlePacket handles a packet received via the listener
