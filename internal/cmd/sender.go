@@ -195,6 +195,14 @@ func (s *sender) handleIPv6(packet gopacket.Packet) bool {
 	return true
 }
 
+// handleIP checks if ip addresses match
+func (s *sender) handleIP(packet gopacket.Packet) bool {
+	if s.test.SrcIP.To4() != nil {
+		return s.handleIPv4(packet)
+	}
+	return s.handleIPv6(packet)
+}
+
 // handleICMPv4 handles ICMPv4 destination unreachable messages
 func (s *sender) handleICMPv4(packet gopacket.Packet) {
 	// handle icmp messages only
@@ -251,6 +259,9 @@ func (s *sender) handleTCPReset(packet gopacket.Packet) {
 
 // HandlePacket handles a packet received via the listener
 func (s *sender) HandlePacket(packet gopacket.Packet) {
+	if !s.handleIP(packet) {
+		return
+	}
 	s.handleICMPv4(packet)
 	s.handleICMPv6(packet)
 	s.handleTCPReset(packet)
