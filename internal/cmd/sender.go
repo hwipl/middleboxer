@@ -163,6 +163,22 @@ type sender struct {
 	packet   []byte
 }
 
+// handleIPv4 checks if ip addresses match
+func (s *sender) handleIPv4(packet gopacket.Packet) bool {
+	// get ip layer
+	ipv4Layer := packet.Layer(layers.LayerTypeIPv4)
+	if ipv4Layer == nil {
+		return false
+	}
+	ipv4, _ := ipv4Layer.(*layers.IPv4)
+
+	// check ips
+	if !ipv4.SrcIP.Equal(s.test.DstIP) || !ipv4.DstIP.Equal(s.test.SrcIP) {
+		return false
+	}
+	return true
+}
+
 // handleICMPv4 handles ICMPv4 destination unreachable messages
 func (s *sender) handleICMPv4(packet gopacket.Packet) {
 	// handle icmp messages only
