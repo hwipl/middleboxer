@@ -179,6 +179,22 @@ func (s *sender) handleIPv4(packet gopacket.Packet) bool {
 	return true
 }
 
+// handleIPv6 checks if ip addresses match
+func (s *sender) handleIPv6(packet gopacket.Packet) bool {
+	// get ip layer
+	ipv6Layer := packet.Layer(layers.LayerTypeIPv6)
+	if ipv6Layer == nil {
+		return false
+	}
+	ipv6, _ := ipv6Layer.(*layers.IPv6)
+
+	// check ips
+	if !ipv6.SrcIP.Equal(s.test.DstIP) || !ipv6.DstIP.Equal(s.test.SrcIP) {
+		return false
+	}
+	return true
+}
+
 // handleICMPv4 handles ICMPv4 destination unreachable messages
 func (s *sender) handleICMPv4(packet gopacket.Packet) {
 	// handle icmp messages only
