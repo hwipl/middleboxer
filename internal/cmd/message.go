@@ -82,6 +82,7 @@ const (
 	ResultReady
 	ResultError
 	ResultPass
+	ResultTCPReset
 	ResultTimeout
 	ResultInvalid
 )
