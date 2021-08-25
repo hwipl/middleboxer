@@ -199,10 +199,29 @@ func (s *sender) handleICMPv6(packet gopacket.Packet) {
 	log.Printf("%v", icmpv6)
 }
 
+// handleTCPReset handles TCP reset messages
+func (s *sender) handleTCPReset(packet gopacket.Packet) {
+	// handle tcp messages only
+	tcpLayer := packet.Layer(layers.LayerTypeTCP)
+	if tcpLayer == nil {
+		return
+	}
+	tcp, _ := tcpLayer.(*layers.TCP)
+
+	// handle reset messages only
+	if !tcp.RST {
+		return
+	}
+
+	// TODO: check sender ip address? check ports? return result?
+	log.Printf("%v", tcp)
+}
+
 // HandlePacket handles a packet received via the listener
 func (s *sender) HandlePacket(packet gopacket.Packet) {
 	s.handleICMPv4(packet)
 	s.handleICMPv6(packet)
+	s.handleTCPReset(packet)
 }
 
 // sendPacket sends packet
