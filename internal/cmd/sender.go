@@ -253,8 +253,12 @@ func (s *sender) handleTCPReset(packet gopacket.Packet) {
 		return
 	}
 
-	// TODO: check sender ip address? check ports? return result?
-	log.Printf("%v", tcp)
+	// check ports
+	if tcp.SrcPort != layers.TCPPort(s.test.DstPort) ||
+		tcp.DstPort != layers.TCPPort(s.test.SrcPort) {
+		return
+	}
+	// TODO: return result?
 }
 
 // HandlePacket handles a packet received via the listener
