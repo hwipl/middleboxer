@@ -217,8 +217,20 @@ func (s *sender) handleICMPv4(packet gopacket.Packet) {
 		return
 	}
 
-	// TODO: check ICMP codes? check sender ip address? return result?
-	log.Printf("%v", icmpv4)
+	// get encapsulated packet headers
+	encap := gopacket.NewPacket(icmpv4.Payload, layers.LayerTypeIPv4, gopacket.Default)
+
+	// get encapsulated ip header
+	ipv4Layer := encap.Layer(layers.LayerTypeIPv4)
+	if ipv4Layer == nil {
+		return
+	}
+	ipv4, _ := ipv4Layer.(*layers.IPv4)
+
+	// check ip addresses
+	if !ipv4.SrcIP.Equal(s.test.SrcIP) || !ipv4.DstIP.Equal(s.test.DstIP) {
+		return
+	}
 }
 
 // handleICMPv6 handles ICMPv6 destination unreachable messages
