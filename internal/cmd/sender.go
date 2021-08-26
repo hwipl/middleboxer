@@ -231,6 +231,19 @@ func (s *sender) handleICMPv4(packet gopacket.Packet) {
 	if !ipv4.SrcIP.Equal(s.test.SrcIP) || !ipv4.DstIP.Equal(s.test.DstIP) {
 		return
 	}
+
+	// get encapsulated udp header
+	udpLayer := encap.Layer(layers.LayerTypeUDP)
+	if udpLayer == nil {
+		return
+	}
+	udp, _ := udpLayer.(*layers.UDP)
+
+	// check ports
+	if udp.SrcPort != layers.UDPPort(s.test.SrcPort) ||
+		udp.DstPort != layers.UDPPort(s.test.DstPort) {
+		return
+	}
 }
 
 // handleICMPv6 handles ICMPv6 destination unreachable messages
