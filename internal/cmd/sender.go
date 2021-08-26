@@ -244,6 +244,18 @@ func (s *sender) handleICMPv4(packet gopacket.Packet) {
 		udp.DstPort != layers.UDPPort(s.test.DstPort) {
 		return
 	}
+
+	// create result based on icmp code
+	result := &MessageResult{
+		ID: s.test.ID,
+	}
+	switch code := icmpv4.TypeCode.Code(); code {
+	default:
+		log.Println("unexpected icmpv4 type code:", code)
+	}
+
+	// send result back to server
+	s.results <- result
 }
 
 // handleICMPv6 handles ICMPv6 destination unreachable messages
