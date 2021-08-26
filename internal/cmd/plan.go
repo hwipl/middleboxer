@@ -7,11 +7,12 @@ import (
 
 // planResult is a result of a completed plan for printing
 type planResult struct {
-	firstPort uint16
-	lastPort  uint16
-	numPass   int
-	numReset  int
-	numOther  int
+	firstPort          uint16
+	lastPort           uint16
+	numPass            int
+	numPortUnreachable int
+	numReset           int
+	numOther           int
 }
 
 // planResults is a collection of results of a completed plan for printing
@@ -30,6 +31,10 @@ func (p *planResults) String() string {
 		}
 		if r.numPass > 0 {
 			s += fmt.Sprintf(" Pass (%d)", r.numPass)
+		}
+		if r.numPortUnreachable > 0 {
+			s += fmt.Sprintf(" Port Unreachable (%d)",
+				r.numPortUnreachable)
 		}
 		if r.numReset > 0 {
 			s += fmt.Sprintf(" Reset (%d)", r.numReset)
@@ -54,6 +59,7 @@ func (p *planResults) add(r *planResult) {
 	// check if result can be merged with last result
 	last := p.results[len(p.results)-1]
 	if last.numPass == r.numPass &&
+		last.numPortUnreachable == r.numPortUnreachable &&
 		last.numReset == r.numReset &&
 		last.numOther == r.numOther {
 		last.lastPort = r.lastPort
@@ -206,6 +212,8 @@ func (p *plan) printResults() {
 			// handle other results
 			// TODO: do this properly, check for reject messages
 			switch r.Result {
+			case ResultICMPv4PortUnreachable:
+				result.numPortUnreachable++
 			case ResultTCPReset:
 				result.numReset++
 			default:
