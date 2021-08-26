@@ -250,6 +250,8 @@ func (s *sender) handleICMPv4(packet gopacket.Packet) {
 		ID: s.test.ID,
 	}
 	switch code := icmpv4.TypeCode.Code(); code {
+	case layers.ICMPv4CodePort:
+		result.Result = ResultICMPv4PortUnreachable
 	default:
 		log.Println("unexpected icmpv4 type code:", code)
 	}

@@ -82,6 +82,7 @@ const (
 	ResultReady
 	ResultError
 	ResultPass
+	ResultICMPv4PortUnreachable
 	ResultTCPReset
 	ResultTimeout
 	ResultInvalid
