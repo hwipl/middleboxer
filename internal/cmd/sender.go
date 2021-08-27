@@ -197,6 +197,7 @@ func (s *sender) handleIPv6(packet gopacket.Packet) bool {
 
 // handleIP checks if ip addresses match
 func (s *sender) handleIP(packet gopacket.Packet) bool {
+	// TODO: also check if only one ip address matches
 	if s.test.SrcIP.To4() != nil {
 		return s.handleIPv4(packet)
 	}
@@ -218,7 +219,8 @@ func (s *sender) handleICMPv4(packet gopacket.Packet) {
 	}
 
 	// get encapsulated packet headers
-	encap := gopacket.NewPacket(icmpv4.Payload, layers.LayerTypeIPv4, gopacket.Default)
+	encap := gopacket.NewPacket(icmpv4.Payload, layers.LayerTypeIPv4,
+		gopacket.Default)
 
 	// get encapsulated ip header
 	ipv4Layer := encap.Layer(layers.LayerTypeIPv4)
