@@ -274,8 +274,21 @@ func (s *sender) handleICMPv6(packet gopacket.Packet) {
 		return
 	}
 
-	// TODO: check ICMP codes? check sender ip address? return result?
-	log.Printf("%v", icmpv6)
+	// get encapsulated packet headers, skipping first 4 bytes (unused)
+	encap := gopacket.NewPacket(icmpv6.Payload[4:], layers.LayerTypeIPv6,
+		gopacket.Default)
+
+	// get encapsulated ip header
+	ipv6Layer := encap.Layer(layers.LayerTypeIPv6)
+	if ipv6Layer == nil {
+		return
+	}
+	ipv6, _ := ipv6Layer.(*layers.IPv6)
+
+	// check ip addresses
+	if !ipv6.SrcIP.Equal(s.test.SrcIP) || !ipv6.DstIP.Equal(s.test.DstIP) {
+		return
+	}
 }
 
 // handleTCPReset handles TCP reset messages
