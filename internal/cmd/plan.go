@@ -212,7 +212,7 @@ func (p *plan) printResults() {
 			// handle other results
 			// TODO: do this properly, check for reject messages
 			switch r.Result {
-			case ResultICMPv4PortUnreachable:
+			case ResultICMPv4PortUnreachable, ResultICMPv6PortUnreachable:
 				result.numPortUnreachable++
 			case ResultTCPReset:
 				result.numReset++

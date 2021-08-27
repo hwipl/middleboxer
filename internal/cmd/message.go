@@ -83,6 +83,7 @@ const (
 	ResultError
 	ResultPass
 	ResultICMPv4PortUnreachable
+	ResultICMPv6PortUnreachable
 	ResultTCPReset
 	ResultTimeout
 	ResultInvalid
