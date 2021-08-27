@@ -289,6 +289,19 @@ func (s *sender) handleICMPv6(packet gopacket.Packet) {
 	if !ipv6.SrcIP.Equal(s.test.SrcIP) || !ipv6.DstIP.Equal(s.test.DstIP) {
 		return
 	}
+
+	// get encapsulated udp header
+	udpLayer := encap.Layer(layers.LayerTypeUDP)
+	if udpLayer == nil {
+		return
+	}
+	udp, _ := udpLayer.(*layers.UDP)
+
+	// check ports
+	if udp.SrcPort != layers.UDPPort(s.test.SrcPort) ||
+		udp.DstPort != layers.UDPPort(s.test.DstPort) {
+		return
+	}
 }
 
 // handleTCPReset handles TCP reset messages
