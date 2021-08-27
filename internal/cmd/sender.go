@@ -302,6 +302,18 @@ func (s *sender) handleICMPv6(packet gopacket.Packet) {
 		udp.DstPort != layers.UDPPort(s.test.DstPort) {
 		return
 	}
+
+	// create result based on icmp code
+	result := &MessageResult{
+		ID: s.test.ID,
+	}
+	switch code := icmpv6.TypeCode.Code(); code {
+	default:
+		log.Println("unexpected icmpv6 type code:", code)
+	}
+
+	// send result back to server
+	s.results <- result
 }
 
 // handleTCPReset handles TCP reset messages
