@@ -251,8 +251,38 @@ func (s *sender) handleICMPv4(packet gopacket.Packet) {
 		ID: s.test.ID,
 	}
 	switch code := icmpv4.TypeCode.Code(); code {
+	case layers.ICMPv4CodeNet:
+		result.Result = ResultICMPv4NetworkUnreachable
+	case layers.ICMPv4CodeHost:
+		result.Result = ResultICMPv4HostUnreachable
+	case layers.ICMPv4CodeProtocol:
+		result.Result = ResultICMPv4ProtocolUnreachable
 	case layers.ICMPv4CodePort:
 		result.Result = ResultICMPv4PortUnreachable
+	case layers.ICMPv4CodeFragmentationNeeded:
+		result.Result = ResultICMPv4FragmentationNeeded
+	case layers.ICMPv4CodeSourceRoutingFailed:
+		result.Result = ResultICMPv4SourceRoutingFailed
+	case layers.ICMPv4CodeNetUnknown:
+		result.Result = ResultICMPv4NetworkUnknown
+	case layers.ICMPv4CodeHostUnknown:
+		result.Result = ResultICMPv4HostUnknown
+	case layers.ICMPv4CodeSourceIsolated:
+		result.Result = ResultICMPv4SourceIsolated
+	case layers.ICMPv4CodeNetAdminProhibited:
+		result.Result = ResultICMPv4NetworkProhibited
+	case layers.ICMPv4CodeHostAdminProhibited:
+		result.Result = ResultICMPv4HostProhibited
+	case layers.ICMPv4CodeNetTOS:
+		result.Result = ResultICMPv4NetworkTOS
+	case layers.ICMPv4CodeHostTOS:
+		result.Result = ResultICMPv4HostTOS
+	case layers.ICMPv4CodeCommAdminProhibited:
+		result.Result = ResultICMPv4CommProhibited
+	case layers.ICMPv4CodeHostPrecedence:
+		result.Result = ResultICMPv4HostPrecedence
+	case layers.ICMPv4CodePrecedenceCutoff:
+		result.Result = ResultICMPv4PrecedenceCutoff
 	default:
 		log.Println("unexpected icmpv4 type code:", code)
 	}

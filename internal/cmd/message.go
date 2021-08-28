@@ -82,7 +82,22 @@ const (
 	ResultReady
 	ResultError
 	ResultPass
+	ResultICMPv4NetworkUnreachable
+	ResultICMPv4HostUnreachable
+	ResultICMPv4ProtocolUnreachable
 	ResultICMPv4PortUnreachable
+	ResultICMPv4FragmentationNeeded
+	ResultICMPv4SourceRoutingFailed
+	ResultICMPv4NetworkUnknown
+	ResultICMPv4HostUnknown
+	ResultICMPv4SourceIsolated
+	ResultICMPv4NetworkProhibited
+	ResultICMPv4HostProhibited
+	ResultICMPv4NetworkTOS
+	ResultICMPv4HostTOS
+	ResultICMPv4CommProhibited
+	ResultICMPv4HostPrecedence
+	ResultICMPv4PrecedenceCutoff
 	ResultICMPv6PortUnreachable
 	ResultTCPReset
 	ResultTimeout
