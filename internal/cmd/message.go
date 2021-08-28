@@ -98,7 +98,13 @@ const (
 	ResultICMPv4CommProhibited
 	ResultICMPv4HostPrecedence
 	ResultICMPv4PrecedenceCutoff
+	ResultICMPv6NoRouteToDst
+	ResultICMPv6AdminProhibited
+	ResultICMPv6BeyondScopeOfSrc
+	ResultICMPv6AddressUnreachable
 	ResultICMPv6PortUnreachable
+	ResultICMPv6SrcAddressFaileD
+	ResultICMPv6RejectRouteToDst
 	ResultTCPReset
 	ResultTimeout
 	ResultInvalid

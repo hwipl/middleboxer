@@ -339,8 +339,20 @@ func (s *sender) handleICMPv6(packet gopacket.Packet) {
 		ID: s.test.ID,
 	}
 	switch code := icmpv6.TypeCode.Code(); code {
+	case layers.ICMPv6CodeNoRouteToDst:
+		result.Result = ResultICMPv6NoRouteToDst
+	case layers.ICMPv6CodeAdminProhibited:
+		result.Result = ResultICMPv6AdminProhibited
+	case layers.ICMPv6CodeBeyondScopeOfSrc:
+		result.Result = ResultICMPv6BeyondScopeOfSrc
+	case layers.ICMPv6CodeAddressUnreachable:
+		result.Result = ResultICMPv6AddressUnreachable
 	case layers.ICMPv6CodePortUnreachable:
 		result.Result = ResultICMPv6PortUnreachable
+	case layers.ICMPv6CodeSrcAddressFailedPolicy:
+		result.Result = ResultICMPv6SrcAddressFaileD
+	case layers.ICMPv6CodeRejectRouteToDst:
+		result.Result = ResultICMPv6RejectRouteToDst
 	default:
 		log.Println("unexpected icmpv6 type code:", code)
 	}
