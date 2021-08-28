@@ -188,8 +188,8 @@ func (s *sender) handleIPv6(packet gopacket.Packet) bool {
 	}
 	ipv6, _ := ipv6Layer.(*layers.IPv6)
 
-	// check ips
-	if !ipv6.SrcIP.Equal(s.test.DstIP) || !ipv6.DstIP.Equal(s.test.SrcIP) {
+	// check destination ip
+	if !ipv6.DstIP.Equal(s.test.SrcIP) {
 		return false
 	}
 	return true
@@ -197,7 +197,6 @@ func (s *sender) handleIPv6(packet gopacket.Packet) bool {
 
 // handleIP checks if ip addresses match
 func (s *sender) handleIP(packet gopacket.Packet) bool {
-	// TODO: also check if only one ip address matches
 	if s.test.SrcIP.To4() != nil {
 		return s.handleIPv4(packet)
 	}
