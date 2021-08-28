@@ -172,8 +172,8 @@ func (s *sender) handleIPv4(packet gopacket.Packet) bool {
 	}
 	ipv4, _ := ipv4Layer.(*layers.IPv4)
 
-	// check ips
-	if !ipv4.SrcIP.Equal(s.test.DstIP) || !ipv4.DstIP.Equal(s.test.SrcIP) {
+	// check destination ip
+	if !ipv4.DstIP.Equal(s.test.SrcIP) {
 		return false
 	}
 	return true
