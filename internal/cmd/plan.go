@@ -42,6 +42,23 @@ func (p *planResults) passesString() string {
 	return s
 }
 
+// rejectsString returns a string for mostly rejected results
+func (p *planResults) rejectsString() string {
+	if len(p.passes) >= len(p.rejects) || len(p.drops) > len(p.rejects) {
+		return ""
+	}
+	s := fmt.Sprintf("%d:%d policy REJECT\n", p.firstPort, p.lastPort)
+	for i := p.firstPort; i <= p.lastPort && i != 0; i++ {
+		if r, ok := p.passes[i]; ok {
+			s += fmt.Sprintf("%d\tpass\n", r.port)
+		}
+		if r, ok := p.drops[i]; ok {
+			s += fmt.Sprintf("%d\tdrop\n", r.port)
+		}
+	}
+	return s
+}
+
 // String converts planResults to a string
 func (p *planResults) String() string {
 	s := ""
