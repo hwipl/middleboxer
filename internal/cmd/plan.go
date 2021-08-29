@@ -7,8 +7,7 @@ import (
 
 // planResult is a result of a completed plan for printing
 type planResult struct {
-	firstPort          uint16
-	lastPort           uint16
+	port               uint16
 	numPass            int
 	numPortUnreachable int
 	numReset           int
@@ -26,10 +25,7 @@ type planResults struct {
 func (p *planResults) String() string {
 	s := ""
 	for _, r := range p.results {
-		if r.firstPort != r.lastPort {
-			s += fmt.Sprintf("%d:%d", r.firstPort, r.lastPort)
-		} else {
-			s += fmt.Sprintf("%d", r.firstPort)
+		s += fmt.Sprintf("%d", r.port)
 		}
 		if r.numPass > 0 {
 			s += fmt.Sprintf(" Pass (%d)", r.numPass)
@@ -80,15 +76,6 @@ func (p *planResults) add(r *planResult) {
 		p.lastPort = r.port
 	}
 
-	// check if result can be merged with last result
-	last := p.results[len(p.results)-1]
-	if last.numPass == r.numPass &&
-		last.numPortUnreachable == r.numPortUnreachable &&
-		last.numReset == r.numReset &&
-		last.numOther == r.numOther {
-		last.lastPort = r.lastPort
-		return
-	}
 
 	// add a new results
 	p.results = append(p.results, r)
@@ -231,7 +218,7 @@ func (p *plan) printResults() {
 			break
 		}
 
-		result := planResult{firstPort: item.port, lastPort: item.port}
+		result := planResult{port: item.port}
 		for _, r := range item.senderResults {
 			// handle other results
 			// TODO: do this properly, check for reject messages
