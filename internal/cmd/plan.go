@@ -22,6 +22,7 @@ type planResults struct {
 	passes    map[uint16]*planResult
 	rejects   map[uint16]*planResult
 	drops     map[uint16]*planResult
+	others    map[uint16]*planResult
 }
 
 // String converts planResults to a string
@@ -102,6 +103,9 @@ func (p *planResults) add(r *planResult) {
 
 	// add a new results
 	p.results = append(p.results, r)
+
+	// other packets
+	p.others = addPlanResult(p.others, r)
 }
 
 // planItem is a specific test in a test execution plan
