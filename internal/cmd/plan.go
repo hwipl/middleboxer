@@ -19,6 +19,7 @@ type planResult struct {
 type planResults struct {
 	results []*planResult
 	firstPort uint16
+	lastPort  uint16
 }
 
 // String converts planResults to a string
@@ -57,9 +58,12 @@ func (p *planResults) add(r *planResult) {
 		return
 	}
 
-	// set first port
+	// set first and last port
 	if p.firstPort == 0 || r.port < p.firstPort {
 		p.firstPort = r.port
+	}
+	if p.lastPort == 0 || r.port > p.lastPort {
+		p.lastPort = r.port
 	}
 
 	// check if result can be merged with last result
