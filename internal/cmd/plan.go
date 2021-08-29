@@ -76,6 +76,18 @@ func (p *planResults) dropsString() string {
 	return s
 }
 
+// othersString returns a string for other results
+func (p *planResults) othersString() string {
+	if len(p.others) == 0 {
+		return ""
+	}
+	s := fmt.Sprintf("Other results:\n")
+	for _, r := range p.others {
+		s += fmt.Sprintf("%d\tother\n", r.port)
+	}
+	return s
+}
+
 // String converts planResults to a string
 func (p *planResults) String() string {
 	s := ""
