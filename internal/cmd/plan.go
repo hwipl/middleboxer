@@ -19,6 +19,7 @@ type planResults struct {
 	results []*planResult
 	firstPort uint16
 	lastPort  uint16
+	passes    map[uint16]*planResult
 }
 
 // String converts planResults to a string
@@ -74,6 +75,12 @@ func (p *planResults) add(r *planResult) {
 	}
 	if p.lastPort == 0 || r.port > p.lastPort {
 		p.lastPort = r.port
+	}
+
+	// passing packets
+	if r.numPass > 0 {
+		p.passes = addPlanResult(p.passes, r)
+		return
 	}
 
 
