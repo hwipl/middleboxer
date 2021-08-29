@@ -20,6 +20,7 @@ type planResults struct {
 	firstPort uint16
 	lastPort  uint16
 	passes    map[uint16]*planResult
+	rejects   map[uint16]*planResult
 }
 
 // String converts planResults to a string
@@ -80,6 +81,12 @@ func (p *planResults) add(r *planResult) {
 	// passing packets
 	if r.numPass > 0 {
 		p.passes = addPlanResult(p.passes, r)
+		return
+	}
+
+	// rejected packets
+	if r.numPortUnreachable > 0 || r.numReset > 0 {
+		p.rejects = addPlanResult(p.rejects, r)
 		return
 	}
 
