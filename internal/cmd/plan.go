@@ -91,24 +91,10 @@ func (p *planResults) othersString() string {
 // String converts planResults to a string
 func (p *planResults) String() string {
 	s := ""
-	for _, r := range p.results {
-		s += fmt.Sprintf("%d", r.port)
-		}
-		if r.numPass > 0 {
-			s += fmt.Sprintf(" Pass (%d)", r.numPass)
-		}
-		if r.numPortUnreachable > 0 {
-			s += fmt.Sprintf(" Port Unreachable (%d)",
-				r.numPortUnreachable)
-		}
-		if r.numReset > 0 {
-			s += fmt.Sprintf(" Reset (%d)", r.numReset)
-		}
-		if r.numOther > 0 {
-			s += fmt.Sprintf(" Other (%d)", r.numOther)
-		}
-		s += "\n"
-	}
+	s += p.passesString()
+	s += p.rejectsString()
+	s += p.dropsString()
+	s += p.othersString()
 	return s
 }
 
