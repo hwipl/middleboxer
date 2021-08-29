@@ -21,6 +21,7 @@ type planResults struct {
 	lastPort  uint16
 	passes    map[uint16]*planResult
 	rejects   map[uint16]*planResult
+	drops     map[uint16]*planResult
 }
 
 // String converts planResults to a string
@@ -90,6 +91,14 @@ func (p *planResults) add(r *planResult) {
 		return
 	}
 
+	// dropped packets
+	if r.numPass == 0 &&
+		r.numPortUnreachable == 0 &&
+		r.numReset == 0 &&
+		r.numOther == 0 {
+		p.drops = addPlanResult(p.drops, r)
+		return
+	}
 
 	// add a new results
 	p.results = append(p.results, r)
