@@ -18,6 +18,7 @@ type planResult struct {
 // planResults is a collection of results of a completed plan for printing
 type planResults struct {
 	results []*planResult
+	firstPort uint16
 }
 
 // String converts planResults to a string
@@ -54,6 +55,11 @@ func (p *planResults) add(r *planResult) {
 		// initialize results
 		p.results = []*planResult{r}
 		return
+	}
+
+	// set first port
+	if p.firstPort == 0 || r.port < p.firstPort {
+		p.firstPort = r.port
 	}
 
 	// check if result can be merged with last result
