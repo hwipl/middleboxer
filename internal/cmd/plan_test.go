@@ -1,6 +1,22 @@
 package cmd
 
-import "testing"
+import (
+	"log"
+	"os"
+	"testing"
+)
+
+// Example_printResults runs printResults() with default values
+func Example_printResults_default() {
+	log.SetFlags(0)
+	log.SetOutput(os.Stdout)
+	plan := newPlan(NewConfig())
+	plan.printResults()
+
+	// Output:
+	// Printing results:
+	// 1:65535 policy DROP
+}
 
 // TestNewPlan tests creating a plan
 func TestNewPlan(t *testing.T) {
