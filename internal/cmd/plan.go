@@ -288,6 +288,7 @@ func (p *plan) printResults() {
 		for _, r := range item.senderResults {
 			// handle other results
 			// TODO: do this properly, check for reject messages
+			// TODO: add all unreachable codes?
 			switch r.Result {
 			case ResultICMPv4PortUnreachable, ResultICMPv6PortUnreachable:
 				result.numPortUnreachable++
