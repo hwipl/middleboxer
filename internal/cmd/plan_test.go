@@ -18,6 +18,20 @@ func Example_printResults_default() {
 	// 1:65535 policy DROP
 }
 
+// Example_printResults runs printResults() with only dropped packets
+func Example_printResults_drop() {
+	log.SetFlags(0)
+	log.SetOutput(os.Stdout)
+	config := NewConfig()
+	config.PortRange = "1024:1032"
+	plan := newPlan(config)
+	plan.printResults()
+
+	// Output:
+	// Printing results:
+	// 1024:1032 policy DROP
+}
+
 // TestNewPlan tests creating a plan
 func TestNewPlan(t *testing.T) {
 	test := func(pr string, want int) {
