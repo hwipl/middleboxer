@@ -64,6 +64,38 @@ func Example_printResults_dropPass() {
 	// 1029	pass
 }
 
+// Example_printResults runs printResults() with dropped packets and
+// some tcp resetted (rejected) packets
+func Example_printResults_dropTCPReset() {
+	// init
+	log.SetFlags(0)
+	log.SetOutput(os.Stdout)
+	config := NewConfig()
+	config.PortRange = "1024:1032"
+	plan := newPlan(config)
+
+	// create result messages
+	r := &MessageResult{
+		Result: ResultTCPReset,
+	}
+	results := []*MessageResult{r}
+
+	// set results for some items
+	for i := uint32(3); i < 6; i++ {
+		plan.items[i].senderResults = results
+	}
+
+	// check output
+	plan.printResults()
+
+	// Output:
+	// Printing results:
+	// 1024:1032 policy DROP
+	// 1027	reject
+	// 1028	reject
+	// 1029	reject
+}
+
 // TestNewPlan tests creating a plan
 func TestNewPlan(t *testing.T) {
 	test := func(pr string, want int) {
