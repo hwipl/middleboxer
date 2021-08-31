@@ -93,6 +93,31 @@ func Example_printResults_dropTCPReset() {
 	// 1029	reject
 }
 
+// Example_printResults_rejectTCPReset runs printResults() with
+// tcp resetted (rejected) packets
+func Example_printResults_rejectTCPReset() {
+	// init
+	plan := getExamplePrintResultsPlan("1024:1032")
+
+	// create result messages
+	r := &MessageResult{
+		Result: ResultTCPReset,
+	}
+	results := []*MessageResult{r}
+
+	// set results for all items
+	for _, i := range plan.items {
+		i.senderResults = results
+	}
+
+	// check output
+	plan.printResults()
+
+	// Output:
+	// Printing results:
+	// 1024:1032 policy REJECT
+}
+
 // TestNewPlan tests creating a plan
 func TestNewPlan(t *testing.T) {
 	test := func(pr string, want int) {
