@@ -118,6 +118,30 @@ func Example_printResults_rejectTCPReset() {
 	// 1024:1032 policy REJECT
 }
 
+// Example_printResults_pass runs printResults() with passing packets
+func Example_printResults_pass() {
+	// init
+	plan := getExamplePrintResultsPlan("1024:1032")
+
+	// create result messages
+	r := &MessageResult{
+		Result: ResultPass,
+	}
+	results := []*MessageResult{r}
+
+	// set results for all items
+	for _, i := range plan.items {
+		i.receiverResults = results
+	}
+
+	// check output
+	plan.printResults()
+
+	// Output:
+	// Printing results:
+	// 1024:1032 policy PASS
+}
+
 // TestNewPlan tests creating a plan
 func TestNewPlan(t *testing.T) {
 	test := func(pr string, want int) {
