@@ -6,11 +6,20 @@ import (
 	"testing"
 )
 
-// Example_printResults runs printResults() with default values
-func Example_printResults_default() {
+// getExamplePrintResultsPlan is a init helper for the printResult examples
+func getExamplePrintResultsPlan(pr string) *plan {
 	log.SetFlags(0)
 	log.SetOutput(os.Stdout)
-	plan := newPlan(NewConfig())
+	config := NewConfig()
+	if pr != "" {
+		config.PortRange = pr
+	}
+	return newPlan(config)
+}
+
+// Example_printResults_default runs printResults() with default values
+func Example_printResults_default() {
+	plan := getExamplePrintResultsPlan("")
 	plan.printResults()
 
 	// Output:
@@ -18,13 +27,9 @@ func Example_printResults_default() {
 	// 1:65535 policy DROP
 }
 
-// Example_printResults runs printResults() with only dropped packets
+// Example_printResults_drop runs printResults() with only dropped packets
 func Example_printResults_drop() {
-	log.SetFlags(0)
-	log.SetOutput(os.Stdout)
-	config := NewConfig()
-	config.PortRange = "1024:1032"
-	plan := newPlan(config)
+	plan := getExamplePrintResultsPlan("1024:1032")
 	plan.printResults()
 
 	// Output:
@@ -32,15 +37,11 @@ func Example_printResults_drop() {
 	// 1024:1032 policy DROP
 }
 
-// Example_printResults runs printResults() with dropped packets and
+// Example_printResults_dropPass runs printResults() with dropped packets and
 // some passing packets
 func Example_printResults_dropPass() {
 	// init
-	log.SetFlags(0)
-	log.SetOutput(os.Stdout)
-	config := NewConfig()
-	config.PortRange = "1024:1032"
-	plan := newPlan(config)
+	plan := getExamplePrintResultsPlan("1024:1032")
 
 	// create result messages
 	r := &MessageResult{
@@ -64,15 +65,11 @@ func Example_printResults_dropPass() {
 	// 1029	pass
 }
 
-// Example_printResults runs printResults() with dropped packets and
-// some tcp resetted (rejected) packets
+// Example_printResults_dropTCPReset runs printResults() with dropped packets
+// and some tcp resetted (rejected) packets
 func Example_printResults_dropTCPReset() {
 	// init
-	log.SetFlags(0)
-	log.SetOutput(os.Stdout)
-	config := NewConfig()
-	config.PortRange = "1024:1032"
-	plan := newPlan(config)
+	plan := getExamplePrintResultsPlan("1024:1032")
 
 	// create result messages
 	r := &MessageResult{
