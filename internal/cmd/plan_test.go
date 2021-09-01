@@ -142,6 +142,48 @@ func Example_printResults_pass() {
 	// 1024:1032 policy PASS
 }
 
+// Example_printResults_even runs printResults() with the same amount of
+// packets in each category
+func Example_printResults_even() {
+	// init
+	plan := getExamplePrintResultsPlan("1024:1032")
+
+	// create reset result messages
+	rr := &MessageResult{
+		Result: ResultTCPReset,
+	}
+	rresults := []*MessageResult{rr}
+
+	// create pass result messages
+	pr := &MessageResult{
+		Result: ResultPass,
+	}
+	presults := []*MessageResult{pr}
+
+	// set reject results for some items
+	for i := uint32(3); i < 6; i++ {
+		plan.items[i].senderResults = rresults
+	}
+
+	// set pass results for some items
+	for i := uint32(6); i < 9; i++ {
+		plan.items[i].receiverResults = presults
+	}
+
+	// check output
+	plan.printResults()
+
+	// Output:
+	// Printing results:
+	// 1024:1032 policy PASS
+	// 1024	drop
+	// 1025	drop
+	// 1026	drop
+	// 1027	reject
+	// 1028	reject
+	// 1029	reject
+}
+
 // TestNewPlan tests creating a plan
 func TestNewPlan(t *testing.T) {
 	test := func(pr string, want int) {
