@@ -24,23 +24,6 @@ type planResults struct {
 	others    map[uint16]*planResult
 }
 
-// dropsString returns a string for mostly dropped results
-func (p *planResults) dropsString() string {
-	if len(p.passes) >= len(p.drops) || len(p.rejects) >= len(p.drops) {
-		return ""
-	}
-	s := fmt.Sprintf("%d:%d policy DROP\n", p.firstPort, p.lastPort)
-	for i := p.firstPort; i <= p.lastPort && i != 0; i++ {
-		if r, ok := p.passes[i]; ok {
-			s += fmt.Sprintf("%d\tpass\n", r.port)
-		}
-		if r, ok := p.rejects[i]; ok {
-			s += fmt.Sprintf("%d\treject\n", r.port)
-		}
-	}
-	return s
-}
-
 // othersString returns a string for other results
 func (p *planResults) othersString() string {
 	if len(p.others) == 0 {
