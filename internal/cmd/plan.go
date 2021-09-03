@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// planResultRange is a port range with the same plan result
 type planResultRange struct {
 	result    uint8
 	firstPort uint16
