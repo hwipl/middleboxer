@@ -22,7 +22,6 @@ type planResult struct {
 
 // planResults is a collection of results of a completed plan for printing
 type planResults struct {
-	drops     map[uint16]*planResult
 	others    map[uint16]*planResult
 	ranges    []*planResultRange
 }
@@ -111,7 +110,6 @@ func (p *planResults) add(r *planResult) {
 		r.numPortUnreachable == 0 &&
 		r.numReset == 0 &&
 		r.numOther == 0 {
-		p.drops = addPlanResult(p.drops, r)
 		p.addRange(r.port, 2)
 		return
 	}
