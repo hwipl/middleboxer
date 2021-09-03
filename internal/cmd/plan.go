@@ -5,6 +5,12 @@ import (
 	"log"
 )
 
+type planResultRange struct {
+	result    uint8
+	firstPort uint16
+	lastPort  uint16
+}
+
 // planResult is a result of a completed plan for printing
 type planResult struct {
 	port               uint16
@@ -22,6 +28,7 @@ type planResults struct {
 	rejects   map[uint16]*planResult
 	drops     map[uint16]*planResult
 	others    map[uint16]*planResult
+	ranges    []*planResultRange
 }
 
 // othersString returns a string for other results
