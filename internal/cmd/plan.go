@@ -46,20 +46,6 @@ func (p *planResults) String() string {
 	return s
 }
 
-// addPlanResult is a helper that adds r to m
-func addPlanResult(m map[uint16]*planResult, r *planResult) map[uint16]*planResult {
-	if m == nil {
-		m = make(map[uint16]*planResult)
-		m[r.port] = r
-		return m
-	}
-
-	// add a new result
-	m[r.port] = r
-	return m
-
-}
-
 // addRange adds port and result to the port/result ranges
 func (p *planResults) addRange(port uint16, result uint8) {
 	if length := len(p.ranges); length > 0 &&
