@@ -22,20 +22,7 @@ type planResult struct {
 
 // planResults is a collection of results of a completed plan for printing
 type planResults struct {
-	others    map[uint16]*planResult
-	ranges    []*planResultRange
-}
-
-// othersString returns a string for other results
-func (p *planResults) othersString() string {
-	if len(p.others) == 0 {
-		return ""
-	}
-	s := fmt.Sprintf("Other results:\n")
-	for _, r := range p.others {
-		s += fmt.Sprintf("%d\tother\n", r.port)
-	}
-	return s
+	ranges []*planResultRange
 }
 
 // String converts planResults to a string
@@ -56,7 +43,6 @@ func (p *planResults) String() string {
 			s += fmt.Sprintf("drop\n")
 		}
 	}
-	s += p.othersString()
 	return s
 }
 
@@ -115,7 +101,7 @@ func (p *planResults) add(r *planResult) {
 	}
 
 	// other packets
-	p.others = addPlanResult(p.others, r)
+	log.Println("other result:", r)
 }
 
 // planItem is a specific test in a test execution plan
