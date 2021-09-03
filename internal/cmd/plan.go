@@ -22,7 +22,6 @@ type planResult struct {
 
 // planResults is a collection of results of a completed plan for printing
 type planResults struct {
-	passes    map[uint16]*planResult
 	rejects   map[uint16]*planResult
 	drops     map[uint16]*planResult
 	others    map[uint16]*planResult
@@ -98,7 +97,6 @@ func (p *planResults) addRange(port uint16, result uint8) {
 func (p *planResults) add(r *planResult) {
 	// passing packets
 	if r.numPass > 0 {
-		p.passes = addPlanResult(p.passes, r)
 		p.addRange(r.port, 0)
 		return
 	}
