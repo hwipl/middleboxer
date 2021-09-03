@@ -22,7 +22,9 @@ func Example_printResults_default() {
 	plan := getExamplePrintResultsPlan("")
 	plan.printResults()
 
-	// TODO: handle output
+	// Output:
+	// Printing results:
+	// 1:65535	drop
 }
 
 // Example_printResults_drop runs printResults() with only dropped packets
@@ -32,15 +34,7 @@ func Example_printResults_drop() {
 
 	// Output:
 	// Printing results:
-	// 1024	drop
-	// 1025	drop
-	// 1026	drop
-	// 1027	drop
-	// 1028	drop
-	// 1029	drop
-	// 1030	drop
-	// 1031	drop
-	// 1032	drop
+	// 1024:1032	drop
 }
 
 // Example_printResults_dropPass runs printResults() with dropped packets and
@@ -65,15 +59,9 @@ func Example_printResults_dropPass() {
 
 	// Output:
 	// Printing results:
-	// 1024	drop
-	// 1025	drop
-	// 1026	drop
-	// 1027	pass
-	// 1028	pass
-	// 1029	pass
-	// 1030	drop
-	// 1031	drop
-	// 1032	drop
+	// 1024:1026	drop
+	// 1027:1029	pass
+	// 1030:1032	drop
 }
 
 // Example_printResults_dropTCPReset runs printResults() with dropped packets
@@ -98,15 +86,9 @@ func Example_printResults_dropTCPReset() {
 
 	// Output:
 	// Printing results:
-	// 1024	drop
-	// 1025	drop
-	// 1026	drop
-	// 1027	reject
-	// 1028	reject
-	// 1029	reject
-	// 1030	drop
-	// 1031	drop
-	// 1032	drop
+	// 1024:1026	drop
+	// 1027:1029	reject
+	// 1030:1032	drop
 }
 
 // Example_printResults_rejectTCPReset runs printResults() with
@@ -131,15 +113,7 @@ func Example_printResults_rejectTCPReset() {
 
 	// Output:
 	// Printing results:
-	// 1024	reject
-	// 1025	reject
-	// 1026	reject
-	// 1027	reject
-	// 1028	reject
-	// 1029	reject
-	// 1030	reject
-	// 1031	reject
-	// 1032	reject
+	// 1024:1032	reject
 }
 
 // Example_printResults_pass runs printResults() with passing packets
@@ -163,15 +137,7 @@ func Example_printResults_pass() {
 
 	// Output:
 	// Printing results:
-	// 1024	pass
-	// 1025	pass
-	// 1026	pass
-	// 1027	pass
-	// 1028	pass
-	// 1029	pass
-	// 1030	pass
-	// 1031	pass
-	// 1032	pass
+	// 1024:1032	pass
 }
 
 // Example_printResults_even runs printResults() with the same amount of
@@ -207,15 +173,9 @@ func Example_printResults_even() {
 
 	// Output:
 	// Printing results:
-	// 1024	drop
-	// 1025	drop
-	// 1026	drop
-	// 1027	reject
-	// 1028	reject
-	// 1029	reject
-	// 1030	pass
-	// 1031	pass
-	// 1032	pass
+	// 1024:1026	drop
+	// 1027:1029	reject
+	// 1030:1032	pass
 }
 
 // TestNewPlan tests creating a plan
