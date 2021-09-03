@@ -75,6 +75,22 @@ func addPlanResult(m map[uint16]*planResult, r *planResult) map[uint16]*planResu
 
 }
 
+// addRange adds port and result to the port/result ranges
+func (p *planResults) addRange(port uint16, result uint8) {
+	if length := len(p.ranges); length > 0 &&
+		p.ranges[length-1].result == result &&
+		p.ranges[length-1].lastPort == port-1 {
+		p.ranges[length-1].lastPort = port
+	} else {
+		newRange := &planResultRange{
+			result:    result,
+			firstPort: port,
+			lastPort:  port,
+		}
+		p.ranges = append(p.ranges, newRange)
+	}
+}
+
 // add adds r to the collection of results; expects results added with
 // increasing port numbers, without gaps
 func (p *planResults) add(r *planResult) {
@@ -89,12 +105,14 @@ func (p *planResults) add(r *planResult) {
 	// passing packets
 	if r.numPass > 0 {
 		p.passes = addPlanResult(p.passes, r)
+		p.addRange(r.port, 0)
 		return
 	}
 
 	// rejected packets
 	if r.numPortUnreachable > 0 || r.numReset > 0 {
 		p.rejects = addPlanResult(p.rejects, r)
+		p.addRange(r.port, 1)
 		return
 	}
 
@@ -104,6 +122,7 @@ func (p *planResults) add(r *planResult) {
 		r.numReset == 0 &&
 		r.numOther == 0 {
 		p.drops = addPlanResult(p.drops, r)
+		p.addRange(r.port, 2)
 		return
 	}
 
