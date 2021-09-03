@@ -22,8 +22,6 @@ type planResult struct {
 
 // planResults is a collection of results of a completed plan for printing
 type planResults struct {
-	firstPort uint16
-	lastPort  uint16
 	passes    map[uint16]*planResult
 	rejects   map[uint16]*planResult
 	drops     map[uint16]*planResult
@@ -98,14 +96,6 @@ func (p *planResults) addRange(port uint16, result uint8) {
 // add adds r to the collection of results; expects results added with
 // increasing port numbers, without gaps
 func (p *planResults) add(r *planResult) {
-	// set first and last port
-	if p.firstPort == 0 || r.port < p.firstPort {
-		p.firstPort = r.port
-	}
-	if p.lastPort == 0 || r.port > p.lastPort {
-		p.lastPort = r.port
-	}
-
 	// passing packets
 	if r.numPass > 0 {
 		p.passes = addPlanResult(p.passes, r)
