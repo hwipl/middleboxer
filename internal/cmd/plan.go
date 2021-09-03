@@ -22,7 +22,6 @@ type planResult struct {
 
 // planResults is a collection of results of a completed plan for printing
 type planResults struct {
-	rejects   map[uint16]*planResult
 	drops     map[uint16]*planResult
 	others    map[uint16]*planResult
 	ranges    []*planResultRange
@@ -103,7 +102,6 @@ func (p *planResults) add(r *planResult) {
 
 	// rejected packets
 	if r.numPortUnreachable > 0 || r.numReset > 0 {
-		p.rejects = addPlanResult(p.rejects, r)
 		p.addRange(r.port, 1)
 		return
 	}
