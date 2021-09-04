@@ -5,6 +5,13 @@ import (
 	"log"
 )
 
+// plan result constants
+const (
+	planResultPass = iota
+	planResultReject
+	planResultDrop
+)
+
 // planResultRange is a port range with the same plan result
 type planResultRange struct {
 	result    uint8
@@ -36,11 +43,11 @@ func (p *planResults) String() string {
 			s += fmt.Sprintf("%d:%d\t", r.firstPort, r.lastPort)
 		}
 		switch r.result {
-		case 0:
+		case planResultPass:
 			s += fmt.Sprintf("pass\n")
-		case 1:
+		case planResultReject:
 			s += fmt.Sprintf("reject\n")
-		case 2:
+		case planResultDrop:
 			s += fmt.Sprintf("drop\n")
 		}
 	}
@@ -68,13 +75,13 @@ func (p *planResults) addRange(port uint16, result uint8) {
 func (p *planResults) add(r *planResult) {
 	// passing packets
 	if r.numPass > 0 {
-		p.addRange(r.port, 0)
+		p.addRange(r.port, planResultPass)
 		return
 	}
 
 	// rejected packets
 	if r.numPortUnreachable > 0 || r.numReset > 0 {
-		p.addRange(r.port, 1)
+		p.addRange(r.port, planResultReject)
 		return
 	}
 
@@ -83,7 +90,7 @@ func (p *planResults) add(r *planResult) {
 		r.numPortUnreachable == 0 &&
 		r.numReset == 0 &&
 		r.numOther == 0 {
-		p.addRange(r.port, 2)
+		p.addRange(r.port, planResultDrop)
 		return
 	}
 
