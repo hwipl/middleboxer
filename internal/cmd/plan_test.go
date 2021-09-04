@@ -178,6 +178,51 @@ func Example_printResults_even() {
 	// 1030:1032	pass
 }
 
+// Example_printResults_interleaved runs printResults() with each packet in a
+// different category
+func Example_printResults_interleaved() {
+	// init
+	plan := getExamplePrintResultsPlan("1024:1032")
+
+	// create reset result messages
+	rr := &MessageResult{
+		Result: ResultTCPReset,
+	}
+	rresults := []*MessageResult{rr}
+
+	// create pass result messages
+	pr := &MessageResult{
+		Result: ResultPass,
+	}
+	presults := []*MessageResult{pr}
+
+	for i, item := range plan.items {
+		switch i % 3 {
+		case 1:
+			// set reject results
+			item.senderResults = rresults
+		case 2:
+			// set pass results
+			item.receiverResults = presults
+		}
+	}
+
+	// check output
+	plan.printResults()
+
+	// Output:
+	// Printing results:
+	// 1024	drop
+	// 1025	reject
+	// 1026	pass
+	// 1027	drop
+	// 1028	reject
+	// 1029	pass
+	// 1030	drop
+	// 1031	reject
+	// 1032	pass
+}
+
 // TestNewPlan tests creating a plan
 func TestNewPlan(t *testing.T) {
 	test := func(pr string, want int) {
