@@ -84,6 +84,24 @@ func (p *planItem) containsPass() bool {
 	return false
 }
 
+// containsReject checks if plan item contains a rejected result
+func (p *planItem) containsReject() bool {
+	for _, r := range p.senderResults {
+		// handle other results
+		// TODO: do this properly, check for reject messages
+		// TODO: add all unreachable codes?
+		switch r.Result {
+		case ResultICMPv4PortUnreachable,
+			ResultICMPv6PortUnreachable,
+			ResultTCPReset:
+			return true
+		default:
+			log.Println("other result:", r)
+		}
+	}
+	return false
+}
+
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
