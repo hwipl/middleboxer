@@ -73,6 +73,17 @@ type planItem struct {
 	receiverResults []*MessageResult
 }
 
+// containsPass checks if plan item contains a passing result
+func (p *planItem) containsPass() bool {
+	for _, r := range p.receiverResults {
+		if r.Result == ResultPass {
+			return true
+		}
+		log.Println("other result:", r)
+	}
+	return false
+}
+
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
