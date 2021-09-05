@@ -87,12 +87,32 @@ func (p *planItem) containsPass() bool {
 // containsReject checks if plan item contains a rejected result
 func (p *planItem) containsReject() bool {
 	for _, r := range p.senderResults {
-		// handle other results
-		// TODO: do this properly, check for reject messages
-		// TODO: add all unreachable codes?
 		switch r.Result {
-		case ResultICMPv4PortUnreachable,
+		case ResultICMPv4NetworkUnreachable,
+			ResultICMPv4HostUnreachable,
+			ResultICMPv4ProtocolUnreachable,
+			ResultICMPv4PortUnreachable,
+			ResultICMPv4FragmentationNeeded,
+			ResultICMPv4SourceRoutingFailed,
+			ResultICMPv4NetworkUnknown,
+			ResultICMPv4HostUnknown,
+			ResultICMPv4SourceIsolated,
+			ResultICMPv4NetworkProhibited,
+			ResultICMPv4HostProhibited,
+			ResultICMPv4NetworkTOS,
+			ResultICMPv4HostTOS,
+			ResultICMPv4CommProhibited,
+			ResultICMPv4HostPrecedence,
+			ResultICMPv4PrecedenceCutoff,
+			ResultICMPv6NoRouteToDst,
+			ResultICMPv6AdminProhibited,
+			ResultICMPv6BeyondScopeOfSrc,
+			ResultICMPv6AddressUnreachable,
 			ResultICMPv6PortUnreachable,
+			ResultICMPv6SrcAddressFailed,
+			ResultICMPv6RejectRouteToDst,
+			ResultICMPv6SrcRoutingHeader,
+			ResultICMPv6HeadersTooLong,
 			ResultTCPReset:
 			return true
 		default:
