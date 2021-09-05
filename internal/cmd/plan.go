@@ -45,8 +45,9 @@ func (p *planResults) String() string {
 	return s
 }
 
-// addRange adds port and result to the port/result ranges
-func (p *planResults) addRange(port uint16, result uint8) {
+// add adds r to the collection of results; expects results added with
+// increasing port numbers, without gaps
+func (p *planResults) add(port uint16, result uint8) {
 	if length := len(p.ranges); length > 0 &&
 		p.ranges[length-1].result == result &&
 		p.ranges[length-1].lastPort == port-1 {
@@ -58,18 +59,6 @@ func (p *planResults) addRange(port uint16, result uint8) {
 			lastPort:  port,
 		}
 		p.ranges = append(p.ranges, newRange)
-	}
-}
-
-// add adds r to the collection of results; expects results added with
-// increasing port numbers, without gaps
-func (p *planResults) add(port uint16, result uint8) {
-	switch result {
-	case planResultPass, planResultReject, planResultDrop:
-		p.addRange(port, result)
-	default:
-		// other result
-		log.Println("other result:", port, result)
 	}
 }
 
