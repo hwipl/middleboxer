@@ -72,30 +72,14 @@ func (p *planResults) addRange(port uint16, result uint8) {
 
 // add adds r to the collection of results; expects results added with
 // increasing port numbers, without gaps
-func (p *planResults) add(r *planResult) {
-	// passing packets
-	if r.numPass > 0 {
-		p.addRange(r.port, planResultPass)
-		return
+func (p *planResults) add(port uint16, result uint8) {
+	switch result {
+	case planResultPass, planResultReject, planResultDrop:
+		p.addRange(port, result)
+	default:
+		// other result
+		log.Println("other result:", port, result)
 	}
-
-	// rejected packets
-	if r.numPortUnreachable > 0 || r.numReset > 0 {
-		p.addRange(r.port, planResultReject)
-		return
-	}
-
-	// dropped packets
-	if r.numPass == 0 &&
-		r.numPortUnreachable == 0 &&
-		r.numReset == 0 &&
-		r.numOther == 0 {
-		p.addRange(r.port, planResultDrop)
-		return
-	}
-
-	// other packets
-	log.Println("other result:", r)
 }
 
 // planItem is a specific test in a test execution plan
@@ -235,29 +219,39 @@ func (p *plan) printResults() {
 			break
 		}
 
-		result := planResult{port: item.port}
+		numPass := 0
+		numReject := 0
+		numOther := 0
 		for _, r := range item.senderResults {
 			// handle other results
 			// TODO: do this properly, check for reject messages
 			// TODO: add all unreachable codes?
 			switch r.Result {
-			case ResultICMPv4PortUnreachable, ResultICMPv6PortUnreachable:
-				result.numPortUnreachable++
-			case ResultTCPReset:
-				result.numReset++
+			case ResultICMPv4PortUnreachable,
+				ResultICMPv6PortUnreachable,
+				ResultTCPReset:
+				numReject++
 			default:
-				result.numOther++
+				numOther++
 			}
 		}
 		for _, r := range item.receiverResults {
 			if r.Result == ResultPass {
-				result.numPass++
+				numPass++
 				continue
 			}
-			result.numOther++
+			numOther++
 		}
-		results.add(&result)
 
+		if numPass > 0 {
+			results.add(item.port, planResultPass)
+		} else if numReject > 0 {
+			results.add(item.port, planResultReject)
+		} else if numOther > 0 {
+			log.Println("other result:", item)
+		} else {
+			results.add(item.port, planResultDrop)
+		}
 		i++
 	}
 	log.Printf("Printing results:\n%s", &results)
