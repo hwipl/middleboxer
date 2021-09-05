@@ -19,15 +19,6 @@ type planResultRange struct {
 	lastPort  uint16
 }
 
-// planResult is a result of a completed plan for printing
-type planResult struct {
-	port               uint16
-	numPass            int
-	numPortUnreachable int
-	numReset           int
-	numOther           int
-}
-
 // planResults is a collection of results of a completed plan for printing
 type planResults struct {
 	ranges []*planResultRange
