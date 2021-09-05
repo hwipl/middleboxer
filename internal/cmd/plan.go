@@ -236,39 +236,15 @@ func (p *plan) printResults() {
 			break
 		}
 
-		numPass := 0
-		numReject := 0
-		numOther := 0
-		for _, r := range item.senderResults {
-			// handle other results
-			// TODO: do this properly, check for reject messages
-			// TODO: add all unreachable codes?
-			switch r.Result {
-			case ResultICMPv4PortUnreachable,
-				ResultICMPv6PortUnreachable,
-				ResultTCPReset:
-				numReject++
-			default:
-				numOther++
-			}
-		}
-		for _, r := range item.receiverResults {
-			if r.Result == ResultPass {
-				numPass++
-				continue
-			}
-			numOther++
-		}
-
-		if numPass > 0 {
+		switch {
+		case item.containsPass():
 			results.add(item.port, planResultPass)
-		} else if numReject > 0 {
+		case item.containsReject():
 			results.add(item.port, planResultReject)
-		} else if numOther > 0 {
-			log.Println("other result:", item)
-		} else {
+		case item.containsDrop():
 			results.add(item.port, planResultDrop)
 		}
+
 		i++
 	}
 	log.Printf("Printing results:\n%s", &results)
