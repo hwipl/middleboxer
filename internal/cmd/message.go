@@ -103,8 +103,10 @@ const (
 	ResultICMPv6BeyondScopeOfSrc
 	ResultICMPv6AddressUnreachable
 	ResultICMPv6PortUnreachable
-	ResultICMPv6SrcAddressFaileD
+	ResultICMPv6SrcAddressFailed
 	ResultICMPv6RejectRouteToDst
+	ResultICMPv6SrcRoutingHeader
+	ResultICMPv6HeadersTooLong
 	ResultTCPReset
 	ResultTimeout
 	ResultInvalid

@@ -350,7 +350,7 @@ func (s *sender) handleICMPv6(packet gopacket.Packet) {
 	case layers.ICMPv6CodePortUnreachable:
 		result.Result = ResultICMPv6PortUnreachable
 	case layers.ICMPv6CodeSrcAddressFailedPolicy:
-		result.Result = ResultICMPv6SrcAddressFaileD
+		result.Result = ResultICMPv6SrcAddressFailed
 	case layers.ICMPv6CodeRejectRouteToDst:
 		result.Result = ResultICMPv6RejectRouteToDst
 	default:
