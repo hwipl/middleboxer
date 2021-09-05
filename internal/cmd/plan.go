@@ -102,6 +102,14 @@ func (p *planItem) containsReject() bool {
 	return false
 }
 
+// containsDrop checks if plan item contains a dropped result
+func (p *planItem) containsDrop() bool {
+	if len(p.receiverResults) == 0 && len(p.senderResults) == 0 {
+		return true
+	}
+	return false
+}
+
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
