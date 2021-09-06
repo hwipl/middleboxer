@@ -64,7 +64,7 @@ func (p *planResults) add(port uint16, result uint8) {
 
 // planItem is a specific test in a test execution plan
 type planItem struct {
-	id              uint32
+	ID              uint32
 	port            uint16
 	senderMsg       *MessageTest
 	receiverMsg     *MessageTest
@@ -133,7 +133,7 @@ func (p *planItem) containsDrop() bool {
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
-		id:          id,
+		ID:          id,
 		port:        port,
 		senderMsg:   senderMsg,
 		receiverMsg: receiverMsg,

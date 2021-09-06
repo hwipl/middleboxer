@@ -197,10 +197,10 @@ func (s *server) run() {
 				}()
 				continue
 			}
-			if item.id%percentItems == 0 {
-				percent := float32(item.id) / float32(numItems) * 100
+			if item.ID%percentItems == 0 {
+				percent := float32(item.ID) / float32(numItems) * 100
 				log.Printf("Reached plan item %d/%d (%.0f%%)",
-					item.id, numItems, percent)
+					item.ID, numItems, percent)
 			}
 			msg := item.receiverMsg
 			receiver := s.clients[s.plan.receiverID]
