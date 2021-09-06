@@ -70,12 +70,12 @@ type planItem struct {
 	ReceiverMsg     *MessageTest
 	receiverReady   bool
 	SenderResults   []*MessageResult
-	receiverResults []*MessageResult
+	ReceiverResults []*MessageResult
 }
 
 // containsPass checks if plan item contains a passing result
 func (p *planItem) containsPass() bool {
-	for _, r := range p.receiverResults {
+	for _, r := range p.ReceiverResults {
 		if r.Result == ResultPass {
 			return true
 		}
@@ -124,7 +124,7 @@ func (p *planItem) containsReject() bool {
 
 // containsDrop checks if plan item contains a dropped result
 func (p *planItem) containsDrop() bool {
-	if len(p.receiverResults) == 0 && len(p.SenderResults) == 0 {
+	if len(p.ReceiverResults) == 0 && len(p.SenderResults) == 0 {
 		return true
 	}
 	return false
@@ -199,7 +199,7 @@ func (p *plan) handleResult(clientID uint8, result *MessageResult) {
 		}
 
 		// handle other results
-		item.receiverResults = append(item.receiverResults, result)
+		item.ReceiverResults = append(item.ReceiverResults, result)
 	}
 }
 

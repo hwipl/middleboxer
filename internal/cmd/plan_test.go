@@ -51,7 +51,7 @@ func Example_printResults_dropPass() {
 
 	// set results for some items
 	for i := uint32(3); i < 6; i++ {
-		plan.items[i].receiverResults = results
+		plan.items[i].ReceiverResults = results
 	}
 
 	// check output
@@ -129,7 +129,7 @@ func Example_printResults_pass() {
 
 	// set results for all items
 	for _, i := range plan.items {
-		i.receiverResults = results
+		i.ReceiverResults = results
 	}
 
 	// check output
@@ -165,7 +165,7 @@ func Example_printResults_even() {
 
 	// set pass results for some items
 	for i := uint32(6); i < 9; i++ {
-		plan.items[i].receiverResults = presults
+		plan.items[i].ReceiverResults = presults
 	}
 
 	// check output
@@ -203,7 +203,7 @@ func Example_printResults_interleaved() {
 			item.SenderResults = rresults
 		case 2:
 			// set pass results
-			item.receiverResults = presults
+			item.ReceiverResults = presults
 		}
 	}
 
