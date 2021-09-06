@@ -149,7 +149,7 @@ func (s *server) run() {
 					numItems)
 
 				// inform receiver
-				msg := item.receiverMsg
+				msg := item.ReceiverMsg
 				receiver := s.clients[s.plan.receiverID]
 				if !writeMessage(receiver.conn, msg) {
 					log.Println("Error sending to receiver client")
@@ -202,7 +202,7 @@ func (s *server) run() {
 				log.Printf("Reached plan item %d/%d (%.0f%%)",
 					item.ID, numItems, percent)
 			}
-			msg := item.receiverMsg
+			msg := item.ReceiverMsg
 			receiver := s.clients[s.plan.receiverID]
 			if !writeMessage(receiver.conn, msg) {
 				log.Println("Error sending to receiver client")

@@ -67,7 +67,7 @@ type planItem struct {
 	ID              uint32
 	Port            uint16
 	SenderMsg       *MessageTest
-	receiverMsg     *MessageTest
+	ReceiverMsg     *MessageTest
 	receiverReady   bool
 	senderResults   []*MessageResult
 	receiverResults []*MessageResult
@@ -136,7 +136,7 @@ func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *p
 		ID:          id,
 		Port:        port,
 		SenderMsg:   senderMsg,
-		receiverMsg: receiverMsg,
+		ReceiverMsg: receiverMsg,
 	}
 }
 
