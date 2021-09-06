@@ -65,7 +65,7 @@ func (p *planResults) add(port uint16, result uint8) {
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	ID              uint32
-	port            uint16
+	Port            uint16
 	senderMsg       *MessageTest
 	receiverMsg     *MessageTest
 	receiverReady   bool
@@ -134,7 +134,7 @@ func (p *planItem) containsDrop() bool {
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
 		ID:          id,
-		port:        port,
+		Port:        port,
 		senderMsg:   senderMsg,
 		receiverMsg: receiverMsg,
 	}
@@ -258,11 +258,11 @@ func (p *plan) printResults() {
 
 		switch {
 		case item.containsPass():
-			results.add(item.port, planResultPass)
+			results.add(item.Port, planResultPass)
 		case item.containsReject():
-			results.add(item.port, planResultReject)
+			results.add(item.Port, planResultReject)
 		case item.containsDrop():
-			results.add(item.port, planResultDrop)
+			results.add(item.Port, planResultDrop)
 		}
 
 		i++
