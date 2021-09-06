@@ -66,7 +66,7 @@ func (p *planResults) add(port uint16, result uint8) {
 type planItem struct {
 	ID              uint32
 	Port            uint16
-	senderMsg       *MessageTest
+	SenderMsg       *MessageTest
 	receiverMsg     *MessageTest
 	receiverReady   bool
 	senderResults   []*MessageResult
@@ -135,7 +135,7 @@ func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *p
 	return &planItem{
 		ID:          id,
 		Port:        port,
-		senderMsg:   senderMsg,
+		SenderMsg:   senderMsg,
 		receiverMsg: receiverMsg,
 	}
 }

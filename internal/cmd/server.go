@@ -171,7 +171,7 @@ func (s *server) run() {
 			// move on to next item in the plan
 			if r.result.Result == ResultReady && item.receiverReady {
 				// inform sender
-				msg := item.senderMsg
+				msg := item.SenderMsg
 				sender := s.clients[s.plan.senderID]
 				if !writeMessage(sender.conn, msg) {
 					log.Println("Error sending to sender client")
