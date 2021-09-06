@@ -248,7 +248,8 @@ func (s *sender) handleICMPv4(packet gopacket.Packet) {
 
 	// create result based on icmp code
 	result := &MessageResult{
-		ID: s.test.ID,
+		ID:     s.test.ID,
+		Packet: packet.Data(),
 	}
 	switch code := icmpv4.TypeCode.Code(); code {
 	case layers.ICMPv4CodeNet:
@@ -336,7 +337,8 @@ func (s *sender) handleICMPv6(packet gopacket.Packet) {
 
 	// create result based on icmp code
 	result := &MessageResult{
-		ID: s.test.ID,
+		ID:     s.test.ID,
+		Packet: packet.Data(),
 	}
 	switch code := icmpv6.TypeCode.Code(); code {
 	case layers.ICMPv6CodeNoRouteToDst:
@@ -383,8 +385,9 @@ func (s *sender) handleTCPReset(packet gopacket.Packet) {
 
 	// send result back to server
 	s.results <- &MessageResult{
-		s.test.ID,
-		ResultTCPReset,
+		ID:     s.test.ID,
+		Result: ResultTCPReset,
+		Packet: packet.Data(),
 	}
 }
 
@@ -401,7 +404,10 @@ func (s *sender) HandlePacket(packet gopacket.Packet) {
 // sendPacket sends packet
 func (s *sender) sendPacket() {
 	if err := s.listener.send(s.packet); err != nil {
-		s.results <- &MessageResult{s.test.ID, ResultError}
+		s.results <- &MessageResult{
+			ID:     s.test.ID,
+			Result: ResultError,
+		}
 		log.Println(err)
 	}
 }

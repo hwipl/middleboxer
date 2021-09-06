@@ -185,8 +185,9 @@ func (r *receiver) HandlePacket(packet gopacket.Packet) {
 
 	// send result back to server
 	r.results <- &MessageResult{
-		r.test.ID,
-		ResultPass,
+		ID:     r.test.ID,
+		Result: ResultPass,
+		Packet: packet.Data(),
 	}
 }
 
@@ -196,8 +197,8 @@ func (r *receiver) run() {
 	// tell server we are are ready
 	packetListeners.get(r.test.Device).register(r)
 	r.results <- &MessageResult{
-		r.test.ID,
-		ResultReady,
+		ID:     r.test.ID,
+		Result: ResultReady,
 	}
 
 	// wait two seconds and stop in case we do not get the packet

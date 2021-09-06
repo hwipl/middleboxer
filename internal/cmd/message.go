@@ -116,6 +116,7 @@ const (
 type MessageResult struct {
 	ID     uint32
 	Result uint8
+	Packet []byte
 }
 
 // GetType returns the type of the message
