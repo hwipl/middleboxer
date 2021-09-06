@@ -78,7 +78,7 @@ func Example_printResults_dropTCPReset() {
 
 	// set results for some items
 	for i := uint32(3); i < 6; i++ {
-		plan.items[i].senderResults = results
+		plan.items[i].SenderResults = results
 	}
 
 	// check output
@@ -105,7 +105,7 @@ func Example_printResults_rejectTCPReset() {
 
 	// set results for all items
 	for _, i := range plan.items {
-		i.senderResults = results
+		i.SenderResults = results
 	}
 
 	// check output
@@ -160,7 +160,7 @@ func Example_printResults_even() {
 
 	// set reject results for some items
 	for i := uint32(3); i < 6; i++ {
-		plan.items[i].senderResults = rresults
+		plan.items[i].SenderResults = rresults
 	}
 
 	// set pass results for some items
@@ -200,7 +200,7 @@ func Example_printResults_interleaved() {
 		switch i % 3 {
 		case 1:
 			// set reject results
-			item.senderResults = rresults
+			item.SenderResults = rresults
 		case 2:
 			// set pass results
 			item.receiverResults = presults

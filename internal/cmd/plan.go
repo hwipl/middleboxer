@@ -69,7 +69,7 @@ type planItem struct {
 	SenderMsg       *MessageTest
 	ReceiverMsg     *MessageTest
 	receiverReady   bool
-	senderResults   []*MessageResult
+	SenderResults   []*MessageResult
 	receiverResults []*MessageResult
 }
 
@@ -86,7 +86,7 @@ func (p *planItem) containsPass() bool {
 
 // containsReject checks if plan item contains a rejected result
 func (p *planItem) containsReject() bool {
-	for _, r := range p.senderResults {
+	for _, r := range p.SenderResults {
 		switch r.Result {
 		case ResultICMPv4NetworkUnreachable,
 			ResultICMPv4HostUnreachable,
@@ -124,7 +124,7 @@ func (p *planItem) containsReject() bool {
 
 // containsDrop checks if plan item contains a dropped result
 func (p *planItem) containsDrop() bool {
-	if len(p.receiverResults) == 0 && len(p.senderResults) == 0 {
+	if len(p.receiverResults) == 0 && len(p.SenderResults) == 0 {
 		return true
 	}
 	return false
@@ -186,7 +186,7 @@ func (p *plan) handleResult(clientID uint8, result *MessageResult) {
 
 	// add result to result list
 	if isSender {
-		item.senderResults = append(item.senderResults, result)
+		item.SenderResults = append(item.SenderResults, result)
 	} else {
 		if result.Result == ResultReady {
 			// handle "ready" results
