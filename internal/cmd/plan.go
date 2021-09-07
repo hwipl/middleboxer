@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 )
 
 // plan result constants
@@ -268,6 +270,18 @@ func (p *plan) printResults() {
 		i++
 	}
 	log.Printf("Printing results:\n%s", &results)
+}
+
+// writeFile writes all plan items including results to file
+func (p *plan) writeFile(file string) {
+	log.Println("Writing plan to file", file)
+	j, err := json.MarshalIndent(p.items, "", "    ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := os.WriteFile(file, j, 0600); err != nil {
+		log.Fatal(err)
+	}
 }
 
 // newSenderMessage creates a new sender message for a plan
