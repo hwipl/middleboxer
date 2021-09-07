@@ -64,6 +64,9 @@ type Config struct {
 
 	// PortRange is the tested port range
 	PortRange string
+
+	// OutFile is the file the plan and its results are written to
+	OutFile string
 }
 
 // getMACFromString converts a string to a hardware (MAC) address
