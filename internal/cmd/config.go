@@ -193,6 +193,8 @@ func (c *Config) ParseCommandLine() {
 		"set source port of the sending client")
 	flag.StringVar(&c.PortRange, "ports", c.PortRange,
 		"set port range to be tested")
+	flag.StringVar(&c.OutFile, "out", c.OutFile,
+		"set output file")
 
 	// parse command line arguments
 	flag.Parse()
