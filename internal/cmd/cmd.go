@@ -10,6 +10,9 @@ func Run() {
 	if config.ServerMode {
 		plan := newPlan(config)
 		newServer(config.ServerAddress, plan).run()
+		if config.OutFile != "" {
+			plan.writeFile(config.OutFile)
+		}
 		plan.printResults()
 		return
 	}
