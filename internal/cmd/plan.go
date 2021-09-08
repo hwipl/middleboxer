@@ -1,10 +1,14 @@
 package cmd
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 )
 
 // plan result constants
@@ -130,6 +134,28 @@ func (p *planItem) containsDrop() bool {
 		return true
 	}
 	return false
+}
+
+// getEthernetDiffs returns differences in ethernet fields as string
+func (p *planItem) getEthernetDiffs(packet gopacket.Packet) string {
+	// get ethernet header
+	ethLayer := packet.Layer(layers.LayerTypeEthernet)
+	if ethLayer == nil {
+		return ""
+	}
+	eth, _ := ethLayer.(*layers.Ethernet)
+
+	// check mac addresses
+	s := ""
+	if p.SenderMsg.SrcMAC != nil && !bytes.Equal(eth.SrcMAC, p.SenderMsg.SrcMAC) {
+		s += fmt.Sprintf("src mac: %s -> %s\n", p.SenderMsg.SrcMAC,
+			eth.SrcMAC)
+	}
+	if p.SenderMsg.DstMAC != nil && !bytes.Equal(eth.DstMAC, p.SenderMsg.DstMAC) {
+		s += fmt.Sprintf("dst mac: %s -> %s\n", p.SenderMsg.DstMAC,
+			eth.DstMAC)
+	}
+	return s
 }
 
 // newPlanItem creates a new planItem
