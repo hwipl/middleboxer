@@ -191,6 +191,22 @@ func (p *planItem) getIPv6Diffs(packet gopacket.Packet) string {
 	return p.getIPAddrDiffs(ip.SrcIP, ip.DstIP)
 }
 
+// getIPDiffs returns differences in ip fields as string
+func (p *planItem) getIPDiffs(packet gopacket.Packet) string {
+	ip4Layer := packet.Layer(layers.LayerTypeIPv4)
+	if ip4Layer != nil {
+		return p.getIPv4Diffs(packet)
+	}
+
+	ip6Layer := packet.Layer(layers.LayerTypeIPv6)
+	if ip6Layer != nil {
+		return p.getIPv6Diffs(packet)
+	}
+
+	log.Println("packet does not contain ip header")
+	return ""
+}
+
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
