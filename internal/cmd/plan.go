@@ -207,6 +207,20 @@ func (p *planItem) getIPDiffs(packet gopacket.Packet) string {
 	return ""
 }
 
+// getPortDiffs returns differences in port numbers as string
+func (p *planItem) getPortDiffs(src, dst uint16) string {
+	s := ""
+	if p.SenderMsg.SrcPort != src {
+		s += fmt.Sprintf("src port: %d -> %d\n", p.SenderMsg.SrcPort,
+			src)
+	}
+	if p.SenderMsg.DstPort != dst {
+		s += fmt.Sprintf("dst port: %d -> %d\n", p.SenderMsg.DstPort,
+			dst)
+	}
+	return s
+}
+
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
