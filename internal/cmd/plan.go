@@ -234,6 +234,19 @@ func (p *planItem) getTCPDiffs(packet gopacket.Packet) string {
 	return p.getPortDiffs(uint16(tcp.SrcPort), uint16(tcp.DstPort))
 }
 
+// getUDPDiffs returns differences in udp fields as string
+func (p *planItem) getUDPDiffs(packet gopacket.Packet) string {
+	// get udp header
+	udpLayer := packet.Layer(layers.LayerTypeUDP)
+	if udpLayer == nil {
+		return ""
+	}
+	udp, _ := udpLayer.(*layers.UDP)
+
+	// check ports
+	return p.getPortDiffs(uint16(udp.SrcPort), uint16(udp.DstPort))
+}
+
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
