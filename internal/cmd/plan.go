@@ -263,6 +263,26 @@ func (p *planItem) getL4Diffs(packet gopacket.Packet) string {
 	return ""
 }
 
+// printPacketDiffs prints differences in packet fields
+func (p *planItem) printPacketDiffs() {
+	last := ""
+	for _, r := range p.ReceiverResults {
+		if r.Result != ResultPass {
+			continue
+		}
+		packet := gopacket.NewPacket(r.Packet,
+			layers.LayerTypeEthernet, gopacket.Default)
+		s := ""
+		s += p.getEthernetDiffs(packet)
+		s += p.getIPDiffs(packet)
+		s += p.getL4Diffs(packet)
+		if s != "" && s != last {
+			log.Printf("Port %d diffs:\n%s", p.Port, s)
+			last = s
+		}
+	}
+}
+
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
