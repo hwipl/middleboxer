@@ -423,6 +423,18 @@ func (p *plan) printResults() {
 	log.Printf("Printing results:\n%s", &results)
 }
 
+func (p *plan) printPacketDiffs() {
+	i := uint32(0)
+	for {
+		item := p.items[i]
+		if item == nil {
+			break
+		}
+		item.printPacketDiffs()
+		i++
+	}
+}
+
 // writeFile writes all plan items including results to file
 func (p *plan) writeFile(file string) {
 	log.Println("Writing plan to file", file)
