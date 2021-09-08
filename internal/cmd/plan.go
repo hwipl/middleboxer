@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
 	"os"
 
 	"github.com/google/gopacket"
@@ -154,6 +155,18 @@ func (p *planItem) getEthernetDiffs(packet gopacket.Packet) string {
 	if p.SenderMsg.DstMAC != nil && !bytes.Equal(eth.DstMAC, p.SenderMsg.DstMAC) {
 		s += fmt.Sprintf("dst mac: %s -> %s\n", p.SenderMsg.DstMAC,
 			eth.DstMAC)
+	}
+	return s
+}
+
+// getIPAddrDiffs returns differences in ip addresses as string
+func (p *planItem) getIPAddrDiffs(src, dst net.IP) string {
+	s := ""
+	if p.SenderMsg.SrcIP != nil && !p.SenderMsg.SrcIP.Equal(src) {
+		s += fmt.Sprintf("src ip: %s -> %s\n", p.SenderMsg.SrcIP, src)
+	}
+	if p.SenderMsg.DstIP != nil && !p.SenderMsg.DstIP.Equal(dst) {
+		s += fmt.Sprintf("dst ip: %s -> %s\n", p.SenderMsg.DstIP, dst)
 	}
 	return s
 }
