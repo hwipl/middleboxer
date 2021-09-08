@@ -247,6 +247,22 @@ func (p *planItem) getUDPDiffs(packet gopacket.Packet) string {
 	return p.getPortDiffs(uint16(udp.SrcPort), uint16(udp.DstPort))
 }
 
+// getL4Diffs returns differences in l4 fields as string
+func (p *planItem) getL4Diffs(packet gopacket.Packet) string {
+	// check tcp
+	if tcpLayer := packet.Layer(layers.LayerTypeTCP); tcpLayer != nil {
+		return p.getTCPDiffs(packet)
+	}
+
+	// check udp
+	if udpLayer := packet.Layer(layers.LayerTypeUDP); udpLayer != nil {
+		return p.getUDPDiffs(packet)
+	}
+
+	log.Println("packet does not contain expected l4 header")
+	return ""
+}
+
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
