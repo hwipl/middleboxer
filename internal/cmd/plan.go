@@ -171,6 +171,16 @@ func (p *planItem) getIPAddrDiffs(src, dst net.IP) string {
 	return s
 }
 
+// getIPv4Diffs returns differences in ipv4 fields as string
+func (p *planItem) getIPv4Diffs(packet gopacket.Packet) string {
+	ipLayer := packet.Layer(layers.LayerTypeIPv4)
+	if ipLayer == nil {
+		return ""
+	}
+	ip, _ := ipLayer.(*layers.IPv4)
+	return p.getIPAddrDiffs(ip.SrcIP, ip.DstIP)
+}
+
 // newPlanItem creates a new planItem
 func newPlanItem(id uint32, port uint16, senderMsg, receiverMsg *MessageTest) *planItem {
 	return &planItem{
