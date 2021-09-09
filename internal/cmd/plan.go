@@ -69,6 +69,13 @@ func (p *planResults) add(port uint16, result uint8) {
 	}
 }
 
+// planPacketDiff is a difference in packet fields
+type planPacketDiff struct {
+	Field    string
+	Sender   string
+	Receiver string
+}
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	ID              uint32
