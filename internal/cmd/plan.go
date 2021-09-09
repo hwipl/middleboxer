@@ -307,6 +307,15 @@ func (p *planItem) getL4Diffs(packet gopacket.Packet) string {
 	return ""
 }
 
+func (p *planItem) getPacketDiffs(packet []byte) {
+	pkt := gopacket.NewPacket(packet, layers.LayerTypeEthernet,
+		gopacket.Default)
+
+	p.getEthernetDiffs(pkt)
+	p.getIPDiffs(pkt)
+	p.getL4Diffs(pkt)
+}
+
 // printPacketDiffs prints differences in packet fields
 func (p *planItem) printPacketDiffs() {
 	if len(p.PacketDiffs) > 0 {
@@ -398,6 +407,11 @@ func (p *plan) handleResult(clientID uint8, result *MessageResult) {
 			}
 			item.receiverReady = true
 			return
+		}
+
+		if result.Result == ResultPass {
+			// handle "pass" results
+			item.getPacketDiffs(result.Packet)
 		}
 
 		// handle other results
