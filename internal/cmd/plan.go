@@ -121,6 +121,7 @@ type planItem struct {
 	receiverReady   bool
 	SenderResults   []*MessageResult
 	ReceiverResults []*MessageResult
+	PacketDiffs     planPacketDiffs
 }
 
 // containsPass checks if plan item contains a passing result
@@ -308,6 +309,11 @@ func (p *planItem) getL4Diffs(packet gopacket.Packet) string {
 
 // printPacketDiffs prints differences in packet fields
 func (p *planItem) printPacketDiffs() {
+	if len(p.PacketDiffs) > 0 {
+		log.Println(fmt.Sprintf("Port %d packet differences:\n%s",
+			p.Port, p.PacketDiffs))
+	}
+
 	last := ""
 	for _, r := range p.ReceiverResults {
 		if r.Result != ResultPass {
