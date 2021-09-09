@@ -100,6 +100,18 @@ func (p *planPacketDiffs) add(field, sender, receiver string) {
 	*p = append(*p, d)
 }
 
+func (p *planPacketDiffs) String() string {
+	s := ""
+	for i, d := range *p {
+		if i == 0 {
+			s += fmt.Sprintf("%s", d)
+		} else {
+			s += fmt.Sprintf("\n%s", d)
+		}
+	}
+	return s
+}
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	ID              uint32
