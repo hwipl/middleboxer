@@ -76,6 +76,11 @@ type planPacketDiff struct {
 	Receiver string
 }
 
+// String converts a packet difference to a string
+func (p *planPacketDiff) String() string {
+	return fmt.Sprintf("%s: %s -> %s", p.Field, p.Sender, p.Receiver)
+}
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	ID              uint32
