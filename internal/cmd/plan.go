@@ -262,60 +262,65 @@ func (p *planItem) getIPDiffs(packet gopacket.Packet) {
 	log.Println("packet does not contain ip header")
 }
 
-// getPortDiffs returns differences in port numbers as string
-func (p *planItem) getPortDiffs(src, dst uint16) string {
-	s := ""
+// getPortDiffs gets differences in port numbers
+func (p *planItem) getPortDiffs(src, dst uint16) {
 	if p.SenderMsg.SrcPort != src {
-		s += fmt.Sprintf("src port: %d -> %d\n", p.SenderMsg.SrcPort,
-			src)
+		p.PacketDiffs.add(
+			"SrcPort",
+			fmt.Sprintf("%d", p.SenderMsg.SrcPort),
+			fmt.Sprintf("%d", src),
+		)
 	}
 	if p.SenderMsg.DstPort != dst {
-		s += fmt.Sprintf("dst port: %d -> %d\n", p.SenderMsg.DstPort,
-			dst)
+		p.PacketDiffs.add(
+			"DstPort",
+			fmt.Sprintf("%d", p.SenderMsg.DstPort),
+			fmt.Sprintf("%d", dst),
+		)
 	}
-	return s
 }
 
-// getTCPDiffs returns differences in tcp fields as string
-func (p *planItem) getTCPDiffs(packet gopacket.Packet) string {
+// getTCPDiffs gets differences in tcp fields
+func (p *planItem) getTCPDiffs(packet gopacket.Packet) {
 	// get tcp header
 	tcpLayer := packet.Layer(layers.LayerTypeTCP)
 	if tcpLayer == nil {
-		return ""
+		return
 	}
 	tcp, _ := tcpLayer.(*layers.TCP)
 
 	// check ports
-	return p.getPortDiffs(uint16(tcp.SrcPort), uint16(tcp.DstPort))
+	p.getPortDiffs(uint16(tcp.SrcPort), uint16(tcp.DstPort))
 }
 
-// getUDPDiffs returns differences in udp fields as string
-func (p *planItem) getUDPDiffs(packet gopacket.Packet) string {
+// getUDPDiffs gets differences in udp fields
+func (p *planItem) getUDPDiffs(packet gopacket.Packet) {
 	// get udp header
 	udpLayer := packet.Layer(layers.LayerTypeUDP)
 	if udpLayer == nil {
-		return ""
+		return
 	}
 	udp, _ := udpLayer.(*layers.UDP)
 
 	// check ports
-	return p.getPortDiffs(uint16(udp.SrcPort), uint16(udp.DstPort))
+	p.getPortDiffs(uint16(udp.SrcPort), uint16(udp.DstPort))
 }
 
-// getL4Diffs returns differences in l4 fields as string
-func (p *planItem) getL4Diffs(packet gopacket.Packet) string {
+// getL4Diffs gets differences in l4 fields
+func (p *planItem) getL4Diffs(packet gopacket.Packet) {
 	// check tcp
 	if tcpLayer := packet.Layer(layers.LayerTypeTCP); tcpLayer != nil {
-		return p.getTCPDiffs(packet)
+		p.getTCPDiffs(packet)
+		return
 	}
 
 	// check udp
 	if udpLayer := packet.Layer(layers.LayerTypeUDP); udpLayer != nil {
-		return p.getUDPDiffs(packet)
+		p.getUDPDiffs(packet)
+		return
 	}
 
 	log.Println("packet does not contain expected l4 header")
-	return ""
 }
 
 func (p *planItem) getPacketDiffs(packet []byte) {
@@ -332,21 +337,6 @@ func (p *planItem) printPacketDiffs() {
 	if len(p.PacketDiffs) > 0 {
 		log.Println(fmt.Sprintf("Port %d packet differences:\n%s",
 			p.Port, &p.PacketDiffs))
-	}
-
-	last := ""
-	for _, r := range p.ReceiverResults {
-		if r.Result != ResultPass {
-			continue
-		}
-		packet := gopacket.NewPacket(r.Packet,
-			layers.LayerTypeEthernet, gopacket.Default)
-		s := ""
-		s += p.getL4Diffs(packet)
-		if s != "" && s != last {
-			log.Printf("Port %d diffs:\n%s", p.Port, s)
-			last = s
-		}
 	}
 }
 
