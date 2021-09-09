@@ -324,7 +324,7 @@ func (p *planItem) getPacketDiffs(packet []byte) {
 func (p *planItem) printPacketDiffs() {
 	if len(p.PacketDiffs) > 0 {
 		log.Println(fmt.Sprintf("Port %d packet differences:\n%s",
-			p.Port, p.PacketDiffs))
+			p.Port, &p.PacketDiffs))
 	}
 
 	last := ""
