@@ -181,26 +181,30 @@ func (p *planItem) containsDrop() bool {
 	return false
 }
 
-// getEthernetDiffs returns differences in ethernet fields as string
-func (p *planItem) getEthernetDiffs(packet gopacket.Packet) string {
+// getEthernetDiffs gets differences in ethernet fields
+func (p *planItem) getEthernetDiffs(packet gopacket.Packet) {
 	// get ethernet header
 	ethLayer := packet.Layer(layers.LayerTypeEthernet)
 	if ethLayer == nil {
-		return ""
+		return
 	}
 	eth, _ := ethLayer.(*layers.Ethernet)
 
 	// check mac addresses
-	s := ""
 	if p.SenderMsg.SrcMAC != nil && !bytes.Equal(eth.SrcMAC, p.SenderMsg.SrcMAC) {
-		s += fmt.Sprintf("src mac: %s -> %s\n", p.SenderMsg.SrcMAC,
-			eth.SrcMAC)
+		p.PacketDiffs.add(
+			"SrcMAC",
+			fmt.Sprintf("%s", p.SenderMsg.SrcMAC),
+			fmt.Sprintf("%s", eth.SrcMAC),
+		)
 	}
 	if p.SenderMsg.DstMAC != nil && !bytes.Equal(eth.DstMAC, p.SenderMsg.DstMAC) {
-		s += fmt.Sprintf("dst mac: %s -> %s\n", p.SenderMsg.DstMAC,
-			eth.DstMAC)
+		p.PacketDiffs.add(
+			"DstMAC",
+			fmt.Sprintf("%s", p.SenderMsg.DstMAC),
+			fmt.Sprintf("%s", eth.DstMAC),
+		)
 	}
-	return s
 }
 
 // getIPAddrDiffs returns differences in ip addresses as string
@@ -331,7 +335,6 @@ func (p *planItem) printPacketDiffs() {
 		packet := gopacket.NewPacket(r.Packet,
 			layers.LayerTypeEthernet, gopacket.Default)
 		s := ""
-		s += p.getEthernetDiffs(packet)
 		s += p.getIPDiffs(packet)
 		s += p.getL4Diffs(packet)
 		if s != "" && s != last {
