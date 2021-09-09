@@ -83,6 +83,15 @@ func (p *planPacketDiff) String() string {
 
 type planPacketDiffs []*planPacketDiff
 
+func (p *planPacketDiffs) contains(diff *planPacketDiff) bool {
+	for _, d := range *p {
+		if *d == *diff {
+			return true
+		}
+	}
+	return false
+}
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	ID              uint32
