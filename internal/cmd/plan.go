@@ -207,52 +207,59 @@ func (p *planItem) getEthernetDiffs(packet gopacket.Packet) {
 	}
 }
 
-// getIPAddrDiffs returns differences in ip addresses as string
-func (p *planItem) getIPAddrDiffs(src, dst net.IP) string {
-	s := ""
+// getIPAddrDiffs gets differences in ip addresses
+func (p *planItem) getIPAddrDiffs(src, dst net.IP) {
 	if p.SenderMsg.SrcIP != nil && !p.SenderMsg.SrcIP.Equal(src) {
-		s += fmt.Sprintf("src ip: %s -> %s\n", p.SenderMsg.SrcIP, src)
+		p.PacketDiffs.add(
+			"SrcIP",
+			fmt.Sprintf("%s", p.SenderMsg.SrcIP),
+			fmt.Sprintf("%s", src),
+		)
 	}
 	if p.SenderMsg.DstIP != nil && !p.SenderMsg.DstIP.Equal(dst) {
-		s += fmt.Sprintf("dst ip: %s -> %s\n", p.SenderMsg.DstIP, dst)
+		p.PacketDiffs.add(
+			"DstIP",
+			fmt.Sprintf("%s", p.SenderMsg.DstIP),
+			fmt.Sprintf("%s", dst),
+		)
 	}
-	return s
 }
 
-// getIPv4Diffs returns differences in ipv4 fields as string
-func (p *planItem) getIPv4Diffs(packet gopacket.Packet) string {
+// getIPv4Diffs gets differences in ipv4 fields
+func (p *planItem) getIPv4Diffs(packet gopacket.Packet) {
 	ipLayer := packet.Layer(layers.LayerTypeIPv4)
 	if ipLayer == nil {
-		return ""
+		return
 	}
 	ip, _ := ipLayer.(*layers.IPv4)
-	return p.getIPAddrDiffs(ip.SrcIP, ip.DstIP)
+	p.getIPAddrDiffs(ip.SrcIP, ip.DstIP)
 }
 
-// getIPv6fDiffs returns differences in ipv6 fields as string
-func (p *planItem) getIPv6Diffs(packet gopacket.Packet) string {
+// getIPv6fDiffs getss differences in ipv6 fields
+func (p *planItem) getIPv6Diffs(packet gopacket.Packet) {
 	ipLayer := packet.Layer(layers.LayerTypeIPv6)
 	if ipLayer == nil {
-		return ""
+		return
 	}
 	ip, _ := ipLayer.(*layers.IPv6)
-	return p.getIPAddrDiffs(ip.SrcIP, ip.DstIP)
+	p.getIPAddrDiffs(ip.SrcIP, ip.DstIP)
 }
 
-// getIPDiffs returns differences in ip fields as string
-func (p *planItem) getIPDiffs(packet gopacket.Packet) string {
+// getIPDiffs gets differences in ip fields
+func (p *planItem) getIPDiffs(packet gopacket.Packet) {
 	ip4Layer := packet.Layer(layers.LayerTypeIPv4)
 	if ip4Layer != nil {
-		return p.getIPv4Diffs(packet)
+		p.getIPv4Diffs(packet)
+		return
 	}
 
 	ip6Layer := packet.Layer(layers.LayerTypeIPv6)
 	if ip6Layer != nil {
-		return p.getIPv6Diffs(packet)
+		p.getIPv6Diffs(packet)
+		return
 	}
 
 	log.Println("packet does not contain ip header")
-	return ""
 }
 
 // getPortDiffs returns differences in port numbers as string
@@ -335,7 +342,6 @@ func (p *planItem) printPacketDiffs() {
 		packet := gopacket.NewPacket(r.Packet,
 			layers.LayerTypeEthernet, gopacket.Default)
 		s := ""
-		s += p.getIPDiffs(packet)
 		s += p.getL4Diffs(packet)
 		if s != "" && s != last {
 			log.Printf("Port %d diffs:\n%s", p.Port, s)
