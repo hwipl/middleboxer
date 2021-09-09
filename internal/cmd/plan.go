@@ -92,6 +92,14 @@ func (p *planPacketDiffs) contains(diff *planPacketDiff) bool {
 	return false
 }
 
+func (p *planPacketDiffs) add(field, sender, receiver string) {
+	d := &planPacketDiff{field, sender, receiver}
+	if p.contains(d) {
+		return
+	}
+	*p = append(*p, d)
+}
+
 // planItem is a specific test in a test execution plan
 type planItem struct {
 	ID              uint32
