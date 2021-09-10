@@ -485,6 +485,7 @@ func (p *plan) printResults() {
 	log.Printf("Printing results:\n%s", &results)
 }
 
+// printPacketDiffs prints packet differences to the console
 func (p *plan) printPacketDiffs() {
 	i := uint32(0)
 	for {
