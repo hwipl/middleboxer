@@ -67,6 +67,9 @@ type Config struct {
 
 	// OutFile is the file the plan and its results are written to
 	OutFile string
+
+	// ShowDiffs specifies if packet differences are shown in results
+	ShowDiffs bool
 }
 
 // getMACFromString converts a string to a hardware (MAC) address
