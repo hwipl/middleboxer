@@ -14,6 +14,9 @@ func Run() {
 			plan.writeFile(config.OutFile)
 		}
 		plan.printResults()
+		if config.ShowDiffs {
+			plan.printPacketDiffs()
+		}
 		return
 	}
 

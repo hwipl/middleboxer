@@ -198,6 +198,8 @@ func (c *Config) ParseCommandLine() {
 		"set port range to be tested")
 	flag.StringVar(&c.OutFile, "out", c.OutFile,
 		"set output file")
+	flag.BoolVar(&c.ShowDiffs, "diffs", c.ShowDiffs,
+		"show packet diffs in results")
 
 	// parse command line arguments
 	flag.Parse()
