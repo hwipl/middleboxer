@@ -1,5 +1,9 @@
 # middleboxer
 
+middleboxer is a command line tool for testing middleboxes like firewalls. It
+uses cooperating client instances that send packets through a middlebox and
+checks which packets pass through the middlebox and which do not.
+
 ## Overview
 
 A test setup using middleboxer is depicted in the figure below:
