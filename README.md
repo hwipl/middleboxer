@@ -2,6 +2,8 @@
 
 ## Overview
 
+A test setup using middleboxer is depicted in the figure below:
+
 ```
 +----------+     +-----------+     +----------+
 | Client 1 |---->| Middlebox |---->| Client 2 |
@@ -12,6 +14,23 @@
                   | Server |
                   +--------+
 ```
+
+The `middlebox` is the device under test, e.g., a firewall. Two middleboxer
+clients, `client 1` and `client 2`, are connected to a middleboxer `server`.
+Both clients are placed in such a way that they communicate with each other
+through the middlebox.
+
+The server manages the properties of packets, e.g., IP addresses, layer 4
+protocol and ports, that should be sent through the middlebox by the clients.
+It instructs one client to send those packets and the other client to receive
+them.
+
+The clients report back to the server for each packet if the packet passed
+through the middlebox or if they received error messages like ICMP errors or
+TCP resets.
+
+The server collects all results and prints them to the console or writes them
+to a file.
 
 ## Usage
 
