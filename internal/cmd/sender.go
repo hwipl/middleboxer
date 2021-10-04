@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/binary"
 	"log"
 	"time"
 
@@ -124,12 +125,28 @@ func (s *senderPacket) createPacketL4() {
 	}
 }
 
+// createPacketPayload creates the payload of the packet
+func (s *senderPacket) createPacketPayload() {
+	// only set payload for udp traffic
+	if s.test.Protocol != ProtocolUDP {
+		return
+	}
+
+	// use test ID as payload
+	b := make([]byte, 4)
+	binary.BigEndian.PutUint32(b, s.test.ID)
+	payload := gopacket.Payload(b)
+
+	s.layers = append(s.layers, &payload)
+}
+
 // createPacket creates the packet to send
 func (s *senderPacket) createPacket() {
 	// create packet layers
 	s.createPacketEthernet()
 	s.createPacketIP()
 	s.createPacketL4()
+	s.createPacketPayload()
 
 	// serialize packet to bytes
 	opts := gopacket.SerializeOptions{
