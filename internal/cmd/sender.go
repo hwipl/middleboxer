@@ -90,6 +90,7 @@ func (s *senderPacket) createPacketTCP() {
 	tcp := layers.TCP{
 		SrcPort: layers.TCPPort(s.test.SrcPort),
 		DstPort: layers.TCPPort(s.test.DstPort),
+		Seq:     s.test.ID,
 		SYN:     true,
 		Window:  64000,
 	}
