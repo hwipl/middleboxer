@@ -84,3 +84,59 @@ Usage of middleboxer:
   -ssport uint
         set source port of the sending client
 ```
+
+## Examples
+
+### Server
+
+Running a middleboxer server listening on all addresses and port 3333:
+
+```console
+$ middleboxer -server -address :3333 \
+	-sdev veth2 \
+	-ssmac 0a:bc:de:f0:00:12 \
+	-sdmac 0a:bc:de:f0:00:22 \
+	-ssip 192.168.1.1 \
+	-sdip 192.168.1.2 \
+	-ssport 4242 \
+	-rdev veth4 \
+	-rsip 192.168.1.1 \
+	-rdip 192.168.1.2 \
+	-prot 17 \
+	-ports 1024:1032
+```
+
+The command line above configures the following properties of packets sent by
+the sending client:
+* Outgoing network device `veth2`
+* Source MAC address `0a:bc:de:f0:00:12`
+* Destination MAC address `0a:bc:de:f0:00:22`
+* Source IP address `192.168.1.1`
+* Destination IP address `192.168.1.2`
+* Source Port `4242`
+
+The command line above configures the following properties of packets expected
+by the receiving client:
+* Incoming network device `veth4`
+* Source IP address `192.168.1.1`
+* Destination IP address `192.168.1.2`
+
+Additionally, the command line above specifies that UDP should be used (`-prot
+17`) and that all ports from 1024 to 1032 should be tested (`-ports
+1024:1032`).
+
+### Clients
+
+Running a client with ID 1 and connecting to the server listening on
+`192.168.1.3:3333`:
+
+```console
+$ sudo middleboxer -id 1 -address 192.168.1.3:3333
+```
+
+Running a client with ID 2 and connecting to the server listening on
+`192.168.1.3:3333`:
+
+```console
+$ sudo middleboxer -id 2 -address 192.168.1.3:3333
+```
