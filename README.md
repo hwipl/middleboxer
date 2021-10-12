@@ -38,6 +38,9 @@ to a file.
 
 ## Usage
 
+You can run the `middleboxer` command with the following command line
+arguments:
+
 ```
 Usage of middleboxer:
   -address string
