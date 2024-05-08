@@ -1,6 +1,6 @@
 module github.com/hwipl/middleboxer
 
-go 1.18
+go 1.22
 
 require (
 	github.com/gopacket/gopacket v1.0.1-0.20230225095122-6457da64b08f
